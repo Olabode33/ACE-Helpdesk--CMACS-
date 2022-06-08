@@ -1,0 +1,195 @@
+<div bsModal #createOrEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="createOrEditModal" aria-hidden="true" [config]="{backdrop: 'static'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form *ngIf="active" #clientListForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span *ngIf="clientList.id">{{l("EditClientList")}}</span>
+                        <span *ngIf="!clientList.id">{{l("CreateNewClientList")}}</span>
+                    </h4>
+                    <button type="button" class="close" (click)="close()" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="ClientList_ClientName">{{l("ClientName")}}</label>
+                        <input type="text" id="ClientList_ClientName" class="form-control"
+                            [(ngModel)]="clientList.clientName" name="ClientName" required minlength="1"
+                            maxlength="250" />
+                    </div>
+
+                    <div class="form-group m-form__group">
+                        <label for="IndustryIndustryName">{{l("Industry")}}</label>
+                        <div class="input-group">
+                            <input class="form-control" id="IndustryIndustryName" name="industryIndustryName"
+                                [(ngModel)]="industryIndustryName" type="text" disabled>
+                            <div class="input-group-append">
+                                <button class="btn btn-primary blue" (click)="openSelectIndustryModal()"
+                                    type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
+                            </div>
+                            <div class="input-group-prepend">
+                                <button class="btn btn-danger" type="button" (click)="setIndustryIdNull()"><i
+                                        class="fa fa-close"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <input class="form-control" name="clientList.industryId" [(ngModel)]="clientList.industryId"
+                        type="text" hidden>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group m-form__group">
+                                <label for="ReportingTerritoryTerritoryName">{{l("ReportingTerritory")}}</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="ReportingTerritoryTerritoryName"
+                                        name="reportingTerritoryTerritoryName"
+                                        [(ngModel)]="reportingTerritoryTerritoryName" type="text" disabled>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary blue"
+                                            (click)="openSelectReportingTerritoryModal()" type="button"><i
+                                                class="fa fa-search"></i> {{l("Pick")}}</button>
+                                    </div>
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-danger" type="button"
+                                            (click)="setReportingTerritoryIdNull()"><i class="fa fa-close"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <input class="form-control" name="clientList.reportingTerritoryId"
+                                [(ngModel)]="clientList.reportingTerritoryId" type="text" hidden>
+
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group m-form__group">
+                                <label for="StockExchangeStockExchangeName">{{l("StockExchange")}}</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="StockExchangeStockExchangeName"
+                                        name="stockExchangeStockExchangeName"
+                                        [(ngModel)]="stockExchangeStockExchangeName" type="text" disabled>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary blue" (click)="openSelectStockExchangeModal()"
+                                            type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
+                                    </div>
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-danger" type="button"
+                                            (click)="setStockExchangeIdNull()"><i class="fa fa-close"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <input class="form-control" name="clientList.stockExchangeId"
+                                [(ngModel)]="clientList.stockExchangeId" type="text" hidden>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ClientList_ClientAddress">{{l("ClientAddress")}}</label>
+                        <textarea id="ClientList_ClientAddress" class="form-control"
+                            [(ngModel)]="clientList.clientAddress" name="ClientAddress" minlength="1"
+                            maxlength="500"></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="ClientList_ParentEntity">{{l("ParentEntity")}}</label>
+                                <input type="text" id="ClientList_ParentEntity" class="form-control"
+                                    [(ngModel)]="clientList.parentEntity" name="ParentEntity" minlength="1"
+                                    maxlength="200" />
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="ClientList_UltimateParentEntity">{{l("UltimateParentEntity")}}</label>
+                                <input type="text" id="ClientList_UltimateParentEntity" class="form-control"
+                                    [(ngModel)]="clientList.ultimateParentEntity" name="UltimateParentEntity"
+                                    minlength="1" maxlength="200" />
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <br />
+                    <div class="m-checkbox-list">
+                        <label for="ClientList_SecRegistered" class="m-checkbox">
+                            <input id="ClientList_SecRegistered" type="checkbox" name="SecRegistered"
+                                [(ngModel)]="clientList.secRegistered">
+                            {{l("SecRegistered")}}
+                            <span></span>
+                        </label>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="ClientList_FinancialYearEnd">{{l("FinancialYearEnd")}}</label>
+                                <select class="form-control" name="FinancialYearEnd" id="ClientList_FinancialYearEnd"
+                                    [(ngModel)]="clientList.financialYearEnd">
+                                    <option value="0">{{l('Enum_FinYearEnd_0')}}</option>
+
+                                    <option value="1">{{l('Enum_FinYearEnd_1')}}</option>
+
+                                    <option value="2">{{l('Enum_FinYearEnd_2')}}</option>
+
+                                    <option value="3">{{l('Enum_FinYearEnd_3')}}</option>
+
+                                    <option value="4">{{l('Enum_FinYearEnd_4')}}</option>
+
+                                    <option value="5">{{l('Enum_FinYearEnd_5')}}</option>
+
+                                    <option value="6">{{l('Enum_FinYearEnd_6')}}</option>
+
+                                    <option value="7">{{l('Enum_FinYearEnd_7')}}</option>
+
+                                    <option value="8">{{l('Enum_FinYearEnd_8')}}</option>
+
+                                    <option value="9">{{l('Enum_FinYearEnd_9')}}</option>
+
+                                    <option value="10">{{l('Enum_FinYearEnd_10')}}</option>
+
+                                    <option value="11">{{l('Enum_FinYearEnd_11')}}</option>
+
+
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="ClientList_ChannelTypeName">{{l("ChannelTypeName")}}</label>
+                                <select class="form-control" name="ChannelTypeName" id="ClientList_ChannelTypeName"
+                                    [(ngModel)]="clientList.channelTypeName">
+                                    <option value="0">{{l('Enum_ChannelType_0')}}</option>
+
+                                    <option value="1">{{l('Enum_ChannelType_1')}}</option>
+
+
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button [disabled]="saving" type="button" class="btn btn-default"
+                        (click)="close()">{{l("Cancel")}}</button>
+                    <button type="submit" class="btn btn-primary blue" [disabled]="!clientListForm.form.valid"
+                        [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i>
+                        <span>{{l("Save")}}</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <industryLookupTableModal #industryLookupTableModal (modalSave)="getNewIndustryId()"></industryLookupTableModal>
+    <reportingTerritoryLookupTableModal #reportingTerritoryLookupTableModal (modalSave)="getNewReportingTerritoryId()">
+    </reportingTerritoryLookupTableModal>
+    <stockExchangeLookupTableModal #stockExchangeLookupTableModal (modalSave)="getNewStockExchangeId()">
+    </stockExchangeLookupTableModal>
+
+</div>

@@ -1,0 +1,521 @@
+<div [@routerTransition]>
+    
+    <div class="content d-flex flex-column flex-column-fluid">
+        <form *ngIf="active" #requestForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+            <sub-header [title]="request.id && request.requestStatusId == 1 ? 'Treat Request' : 
+                                    (request.id && request.requestStatusId == 0 ? 'Edit Request' :
+                                    (!request.id ? 'Create New Request' : '') )">
+                <div role="actions">
+                    <div class="btn-group m-btn-group m-btn-group--pill" role="group">
+                        <button type="submit" class="btn btn-primary blue" [disabled]="!requestForm.form.valid"
+                            [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"
+                            *ngIf="!_callType || _callType == 0 || _callType == 2">
+                            <i class="fa fa-save"></i>
+                            <span>{{l("Submit")}}</span>
+                        </button>
+                        <button type="button" (click)="saveTechMember()" class="btn btn-primary blue"
+                            [disabled]="!requestForm.form.valid" [buttonBusy]="saving"
+                            [busyText]="l('SavingWithThreeDot')" *ngIf="_callType == 1">
+                            <i class="fa fa-save"></i>
+                            <span>{{l("AssignTeam")}}</span>
+                        </button>
+                        <button type="button" (click)="sendTOR()" class="btn btn-primary blue"
+                            [disabled]="!requestForm.form.valid" [buttonBusy]="saving"
+                            [busyText]="l('SavingWithThreeDot')" *ngIf="_callType == 3">
+                            <i class="fa fa-save"></i>
+                            <span>{{l("SendTOR")}}</span>
+                        </button>
+                        <button type="button" (click)="approveTOR()" class="btn btn-primary blue"
+                            [disabled]="!requestForm.form.valid" [buttonBusy]="saving"
+                            [busyText]="l('SavingWithThreeDot')" *ngIf="_callType == 4">
+                            <i class="fa fa-save"></i>
+                            <span>{{l("ApproveTOR")}}</span>
+                        </button>
+                        <button type="button" (click)="approveRequest()" class="btn btn-primary blue"
+                            [disabled]="!requestForm.form.valid" [buttonBusy]="saving"
+                            [busyText]="l('SavingWithThreeDot')" *ngIf="_callType == 5">
+                            <i class="fa fa-save"></i>
+                            <span>{{l("ApproveRequest")}}</span>
+                        </button>
+                        <button type="button" class="m-btn btn btn-primary" (click)="goBack()">
+                            <i class="fa fa-reply"></i> Back
+                        </button>
+                    </div>
+                </div>
+            </sub-header>
+            <div [class]="containerClass">
+                    <div class="card card-custom gutter-b">
+                        <div class="card-body">
+                            <div class="m-form__group form-group" *ngIf="!_callType">
+                                <label for="">Request Type</label>
+                                <div class="radio-inline">
+                                    <label class="radio" style="font-weight: 300 !important;">
+                                        <input type="radio" class="form-control" name="request.requestTypeId_Consultation"
+                                            [(ngModel)]="request.requestTypeId" [value]="0">
+                                        <span></span>
+                                        {{l("Enum_RequestType_0")}}
+                                    </label>
+                                    <label class="radio" style="font-weight: 300 !important;">
+                                        <input type="radio" class="form-control" name="request.requestTypeId_Enquiry"
+                                            [(ngModel)]="request.requestTypeId" [value]="1">
+                                        <span></span>
+                                        {{l("Enum_RequestType_1")}}
+                                    </label>
+                                    <label class="radio" style="font-weight: 300 !important;">
+                                        <input type="radio" class="form-control" name="request.requestTypeId_Enquiry"
+                                        [(ngModel)]="request.requestTypeId" [value]="2">
+                                        <span></span>
+                                        {{l("Enum_RequestType_2")}}
+                                    </label>
+                                </div>
+                            </div>
+
+                            <tabset class="tab-container tabbable-line">
+                                <tab heading="{{l('Request Info')}}" customClass="m-tabs__item">
+                                    <div class="row">
+                                        <div class="form-group m-form__group col-md-4"
+                                            *ngIf="request.id && request.requestStatusId != 1">
+                                            <label for="UserName">{{l("Name of Requestor")}}</label>
+                                            <div class="input-group">
+                                                <input class="form-control" id="UserName" name="userName" [(ngModel)]="userName"
+                                                    type="text" disabled>
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-primary blue" (click)="openSelectUserModal()"
+                                                        type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
+                                                </div>
+                                                <div class="input-group-prepend">
+                                                    <button class="btn btn-danger" type="button"
+                                                        (click)="setRequestorIdNull()"><i class="fa fa-close"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <input class="form-control" name="request.requestorId" [(ngModel)]="request.requestorId"
+                                            type="text" hidden>
+
+                                        <div class="form-group m-form__group col-md-4">
+                                            <label for="ClientListClientName">{{l("Client")}}</label>
+                                            <div class="input-group" style="padding-left: 0px; padding-right: 0px">
+                                                <input class="form-control" id="ClientListClientName"
+                                                    name="clientListClientName" [(ngModel)]="clientListClientName" type="text"
+                                                    disabled>
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-primary blue" (click)="openSelectClientListModal()"
+                                                        type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
+                                                </div>
+                                                <div class="input-group-prepend">
+                                                    <button class="btn btn-outline-primary" type="button"
+                                                        (click)="openNewClientListModal()"><i class="fa fa-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <input class="form-control" name="request.clientListId"
+                                            [(ngModel)]="request.clientListId" type="text" hidden>
+
+                                        <!--
+                    <div class="form-group m-form__group">
+                        <label for="RequestAreaRequestAreaName">{{l("RequestArea")}}</label>
+                        <div class="input-group">
+                            <input class="form-control" id="RequestAreaRequestAreaName" name="requestAreaRequestAreaName" [(ngModel)]="requestAreaRequestAreaName" type="text" disabled>
+                            <div class="input-group-append">
+                                <button class="btn btn-primary blue" (click)="openSelectRequestAreaModal()" type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
+                            </div>
+                            <div class="input-group-prepend">
+                                <button class="btn btn-danger" type="button" (click)="setRequestAreaIdNull()"><i class="fa fa-close"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <input class="form-control" name="request.requestAreaId" [(ngModel)]="request.requestAreaId" type="text" hidden>
+
+
+                    <div class="form-group m-form__group">
+                        <label for="RequestDomainDomainName">{{l("RequestDomain")}}</label>
+                        <div class="input-group">
+                            <input class="form-control" id="RequestDomainDomainName" name="requestDomainDomainName" [(ngModel)]="requestDomainDomainName" type="text" disabled>
+                            <div class="input-group-append">
+                                <button class="btn btn-primary blue" (click)="openSelectRequestDomainModal()" type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
+                            </div>
+                            <div class="input-group-prepend">
+                                <button class="btn btn-danger" type="button" (click)="setRequestDomainIdNull()"><i class="fa fa-close"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <input class="form-control" name="request.requestDomainId" [(ngModel)]="request.requestDomainId" type="text" hidden>
+        -->
+
+                                        <div class="form-group  col-md-4">
+                                            <label>Request area</label>
+                                            <div></div>
+                                            <select class="custom-select form-control" name="request.requestAreaId"
+                                                [(ngModel)]="request.requestAreaId">
+                                                <!--<option *ngFor="let c of countries" [ngValue]="c">Open this select menu</option>-->
+                                                <option *ngFor="let item of requestAreas" value="{{item.value}}">{{item.name}}
+                                                </option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group  col-md-4">
+                                            <label>Request sub area</label>
+                                            <div></div>
+                                            <p-autoComplete [(ngModel)]="selectedSubAreas"
+                                                            [suggestions]="filteredSubAreas"
+                                                            (completeMethod)="searchSubAreas($event)"
+                                                            field="name"
+                                                            placeholder="Request sub areas"
+                                                            [minLength]="1"
+                                                            name="requestSubAreas"
+                                                            id="requestSubAreas"
+                                                            [multiple]="true"
+                                                            inputStyleClass="form-control"
+                                                            styleClass="width-percent-100">
+                                            </p-autoComplete>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <label>Request domain</label>
+                                            <div></div>
+                                            <select class="custom-select form-control " name="request.requestDomainId"
+                                                [(ngModel)]="request.requestDomainId">
+                                                <option *ngFor="let item of requestDomains" value="{{item.value}}">{{item.name}}
+                                                </option>
+                                            </select>
+                                        </div>
+
+                                        <div class="m-form__group col-md-4 form-group" *ngIf="request.requestTypeId === 2">
+                                            <label for="">Terms of Reference</label>
+                                            <div class="radio-inline">
+                                                <label class="radio" style="font-weight: 300 !important;">
+                                                    <input type="radio" class="form-control" name="request.tor_voluntary"
+                                                        [(ngModel)]="request.voluntryRequiredTor" [value]="false"> Voluntary
+                                                    <span></span>
+                                                </label>
+                                                <label class="radio" style="font-weight: 300 !important;">
+                                                    <input type="radio" class="form-control" name="request.tor_required"
+                                                        [(ngModel)]="request.voluntryRequiredTor" [value]="true"> Required
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="!(request.requestTypeId == 0 || request.requestTypeId == 2)" class="form-group m-form__group col-md-4">
+                                            <label for="UserName3">{{l("Requesting Manager")}}</label>
+                                            <div class="input-group" style="padding-left: 0px; padding-right: 0px">
+                                                <input class="form-control" id="UserName3" name="userName3"
+                                                    [(ngModel)]="userName3" type="text" disabled>
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-primary blue" (click)="openSelectUserModal3()"
+                                                        type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
+                                                </div>
+                                                <div class="input-group-prepend">
+                                                    <button class="btn btn-danger" type="button"
+                                                        (click)="setRequestorManagerIdNull()"><i
+                                                            class="fa fa-close"></i></button>
+                                                </div>
+                                            </div>
+                                            <input class="form-control" name="request.requestorManagerId"
+                                                [(ngModel)]="request.requestorManagerId" type="text" hidden required>
+                                        </div>
+
+
+                                        <div class="col-12">
+                                        <div class="row" *ngIf="request.requestTypeId == 0 || request.requestTypeId == 2">
+                                            <div class="form-group col-md-4">
+                                                <label for="Request_LocalChargeCode">{{l("LocalChargeCode")}}*</label>
+                                                <input type="text" id="Request_LocalChargeCode" class="form-control" required
+                                                    [(ngModel)]="request.localChargeCode" name="LocalChargeCode" minlength="1"
+                                                    maxlength="20" [disabled]="request.id && request.requestStatusId != 0" />
+                                            </div>
+
+                                            <div class="form-group m-form__group col-md-4">
+                                                <label for="UserName3">{{l("Requesting Manager")}}</label>
+                                                <div class="input-group" style="padding-left: 0px; padding-right: 0px">
+                                                    <input class="form-control" id="UserName3" name="userName3"
+                                                        [(ngModel)]="userName3" type="text" disabled>
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-primary blue" (click)="openSelectUserModal3()"
+                                                            type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
+                                                    </div>
+                                                    <div class="input-group-prepend">
+                                                        <button class="btn btn-danger" type="button"
+                                                            (click)="setRequestorManagerIdNull()"><i
+                                                                class="fa fa-close"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <input class="form-control" name="request.requestorManagerId"
+                                                [(ngModel)]="request.requestorManagerId" type="text" hidden required>
+
+                                            <div class="form-group m-form__group col-md-4">
+                                                <label for="UserName2">{{l("Requesting Partner")}}</label>
+                                                <div class="input-group" style="padding-left: 0px; padding-right: 0px">
+                                                    <input class="form-control" id="UserName2" name="userName2"
+                                                        [(ngModel)]="userName2" type="text" disabled>
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-primary blue" (click)="openSelectUserModal2()"
+                                                            type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
+                                                    </div>
+                                                    <div class="input-group-prepend">
+                                                        <button class="btn btn-danger" type="button"
+                                                            (click)="setRequestorPartnerIdNull()"><i
+                                                                class="fa fa-close"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <input class="form-control" name="request.requestorPartnerId"
+                                                [(ngModel)]="request.requestorPartnerId" type="text" hidden required>
+
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                                    <div class="form-group m-form__group col-md-4">
+                                                        <label
+                                                            for="Request_RequiredResponseDate">{{l("RequiredResponseDate")}}*</label>
+                                                        <div class="">
+                                                            <input class="form-control" type="datetime"  required
+                                                            bsDatepicker datePickerMomentModifier [(date)]="request.requiredResponseDate" id="Request_RequiredResponseDate">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group col-md-8">
+                                                        <label
+                                                            for="Request_Background">{{l("Reason for required response date")}}</label>
+                                                        <textarea id="Request_ReasonResponseDate"
+                                                            [(ngModel)]="request.reasonResponseDate" rows="7"
+                                                            class="form-control" name="ReasonResponseDate"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="m-checkbox-list">
+                                                    <label for="Request_IssueDiscussed" class="m-checkbox">
+                                                        <input id="Request_IssueDiscussed" type="checkbox" name="IssueDiscussed"
+                                                            [(ngModel)]="request.issueDiscussed">
+                                                        {{l("Has issue been previous discussed?")}}
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-4" *ngIf="request.issueDiscussed">
+                                                <label for="Request_IssueDiscussedWith">{{l("IssueDiscussedWith")}}</label>
+                                                <input type="text" id="Request_IssueDiscussedWith" class="form-control"
+                                                    [(ngModel)]="request.issueDiscussedWith" name="IssueDiscussedWith" />
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </tab>
+
+                                <tab heading="{{l('Request Details')}}" customClass="m-tabs__item"
+                                    *ngIf="request.requestTypeId == 0">
+
+                                    <div class="form-group">
+                                        <label for="Request_ConsultationIssue">{{l("ConsultationIssue")}}</label><br>
+                                        <span class="m-form__help">{{l("ConsultationIssueNote")}}</span>
+                                        <p-editor id="Request_ConsultationIssue" [(ngModel)]="request.consultationIssue"
+                                            name="ConsultationIssue" [style]="{'height':'250px'}"
+                                            [readonly]="request.id && request.requestStatusId != 0"></p-editor>
+                                    </div>
+
+                                    <br><br>
+
+                                    <div class="form-group">
+                                        <label for="Request_Background">{{l("Background, Facts and Circumstances")}}</label><br>
+                                        <span class="m-form__help">{{l("BackgroundNote")}}</span>
+                                        <p-editor id="Request_Background" [(ngModel)]="request.background" name="Background"
+                                            [style]="{'height':'250px'}"></p-editor>
+                                    </div>
+
+                                    <br><br>
+
+                                    <div class="form-group">
+                                        <label for="Request_TechReference">{{l("TechReference")}}</label><br>
+                                        <span class="m-form__help">{{l("TechnicalReferenceNote")}}</span>
+                                        <p-editor id="Request_TechReference" [(ngModel)]="request.techReference"
+                                            name="TechReference" [style]="{'height':'250px'}"
+                                            [readonly]="request.id && request.requestStatusId != 0"></p-editor>
+                                    </div>
+
+                                    <br><br>
+
+                                    <div class="form-group">
+                                        <label for="Request_AgreedGuidance">{{l("AgreedGuidance")}}</label><br>
+                                        <span class="m-form__help">{{l("AgreedGuidanceNote")}}</span>
+                                        <p-editor id="Request_AgreedGuidance" [(ngModel)]="request.agreedGuidance"
+                                            name="AgreedGuidance" [style]="{'height':'250px'}"
+                                            [readonly]="request.id && request.requestStatusId != 0"></p-editor>
+                                    </div>
+
+                                    <br><br>
+
+                                    <div class="form-group m-form__group">
+                                        <label for="DefaultFileUploadFileInput" class="control-label">Attachments</label>
+                                        <p-fileUpload multiple="multiple" id="DefaultFileUploadFileInput" accept=".pdf"
+                                            name="DefaultFileUploadFileInput[]" [url]="uploadUrl" maxFileSize="100000000"
+                                            (onUpload)="onUpload($event)" (onBeforeSend)="onBeforeSend($event)">
+                                            <ng-template pTemplate="content">
+                                                <ul *ngIf="uploadedFiles.length">
+                                                    <li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes
+                                                    </li>
+                                                </ul>
+                                            </ng-template>
+                                        </p-fileUpload>
+                                    </div>
+                                </tab>
+                                <tab heading="{{l('Technical Group Response')}}" customClass="m-tabs__item"
+                                    *ngIf="_callType == 2 && request.requestTypeId == 0">
+                                    <div class="form-group">
+                                        <label for="Request_TechGrpResponse">{{l("TechGrpResponse")}}</label><br>
+                                        <span class="m-form__help">{{l("TechnicalGroupResponseNote")}}</span>
+                                        <p-editor id="Request_TechGrpResponse" [(ngModel)]="request.techGrpResponse"
+                                            name="TechGrpResponse" [style]="{'height':'500px'}"></p-editor>
+                                    </div>
+
+                                    <br><br>
+
+                                    <div class="form-group">
+                                        <label for="Request_TechConclusion">{{l("TechConclusion")}}</label>
+                                        <label for="Request_TechConclusion"></label>
+                                        <p-editor id="Request_TechConclusion" [(ngModel)]="request.techConclusion"
+                                            name="TechConclusion" [style]="{'height':'500px'}"></p-editor>
+                                    </div>
+
+                                    <br><br>
+
+                                    <div class="form-group">
+                                        <label for="Request_OtherConsideration">{{l("OtherConsideration")}}</label>
+                                        <label for="Request_OtherConsideration"></label>
+                                        <p-editor id="Request_OtherConsideration" [(ngModel)]="request.otherConsideration"
+                                            name="OtherConsideration" [style]="{'height':'200px'}"></p-editor>
+                                    </div>
+
+                                    <br><br>
+
+                                    <div class="form-group" hidden>
+                                        <label for="Request_RequestStatusId">{{l("RequestStatusId")}}</label>
+                                        <select class="form-control" name="RequestStatusId" id="Request_RequestStatusId"
+                                            [(ngModel)]="request.requestStatusId">
+                                            <option value="0">{{l('Enum_RequestStatus_0')}}</option>
+
+                                            <option value="1">{{l('Enum_RequestStatus_1')}}</option>
+
+                                            <option value="2">{{l('Enum_RequestStatus_2')}}</option>
+
+                                            <option value="3">{{l('Enum_RequestStatus_3')}}</option>
+
+                                            <option value="4">{{l('Enum_RequestStatus_4')}}</option>
+
+                                            <option value="5">{{l('Enum_RequestStatus_5')}}</option>
+
+                                            <option value="6">{{l('Enum_RequestStatus_6')}}</option>
+
+                                        </select>
+                                    </div>
+
+                                </tab>
+                                <tab heading="{{l('Enquiry')}}" customClass="m-tabs__item" *ngIf="request.requestTypeId == 1">
+                                    <div class="form-group m-form__group">
+                                        <div class="form-group">
+                                            <label for="Request_Enquiry">{{l("Enquiry")}}</label>
+                                            <p-editor id="Request_Enquiry" [(ngModel)]="request.enquiry" name="Enquiry"
+                                                [style]="{'height':'200px'}"></p-editor>
+                                        </div>
+
+                                        <br><br>
+
+                                        <div class="form-group" *ngIf="_callType == 2">
+                                            <label for="Request_EnquiryResponse">{{l("Response")}}</label>
+                                            <p-editor id="Request_EnquiryResponse" [(ngModel)]="request.enquiryResponse"
+                                                name="EnquiryResponse" [style]="{'height':'500px'}"></p-editor>
+                                        </div>
+                                    </div>
+                                </tab>
+                                <tab heading="{{l('Technical Team')}}" customClass="m-tabs__item" *ngIf="_callType == 1">
+                                    <div class="form-group m-form__group">
+                                        <label>{{l("Team Members")}}</label>
+
+                                        <div class="table-responsive col-md-10 border">
+                                            <table class="table table-sm">
+                                                <thead>
+
+                                                    <tr>
+                                                        <th scope="col">Name</th>
+
+                                                        <th scope="col" class="pull-right"><button
+                                                                class="btn btn-sm btn-success" (click)="openSelectUserModal5()"
+                                                                type="button"><i class="fa fa-plus"></i>
+                                                                {{l("Add")}}</button></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let item of techTeamMembers">
+                                                        <td scope="row">{{item.displayName}}</td>
+
+                                                        <td class="pull-right"><button class="btn btn-danger btn-sm"
+                                                                (click)="removeapproverUserId(item.id)" type="button"><i
+                                                                    class="fa fa-trash"></i></button>
+                                                        </td>
+
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </tab>
+                                <tab heading="{{l('TOR')}}" customClass="m-tabs__item" *ngIf="_callType == 3 || _callType == 4">
+                                    <div class="form-group m-form__group">
+                                        <div class="form-group">
+                                            <label for="Request_Enquiry">{{l("TOR")}}</label>
+                                            <p-editor id="Request_TermsOfRef" [(ngModel)]="request.termsOfRef" name="TermsOfRef"
+                                                [style]="{'height':'600px'}"></p-editor>
+                                        </div>
+                                    </div>
+                                </tab>
+                                <tab heading="{{l('FS Review')}}" customClass="m-tabs__item" *ngIf="request.requestTypeId == 2">
+                                    <div class="form-group m-form__group">
+                                        <div class="form-group">
+                                            <label for="Request_Enquiry">{{l("Comment")}}</label>
+                                            <p-editor id="Request_Enquiry" [(ngModel)]="request.enquiry" name="Enquiry"
+                                                [style]="{'height':'200px'}"></p-editor>
+                                        </div>
+
+                                        <br><br>
+                                        <div class="form-group m-form__group">
+                                            <label for="SignedTORFileUploadFileInput" class="control-label">Attachments</label>
+                                            <p-fileUpload multiple="multiple" id="SignedTORFileUploadFileInput" accept=".pdf,.xlsx"
+                                                name="SignedTORFileUploadFileInput[]" [url]="uploadUrl" maxFileSize="100000000" [auto]="true"
+                                                (onUpload)="onUploadSignedTOR($event)" (onBeforeSend)="onBeforeSend($event)">
+                                                <ng-template pTemplate="content">
+                                                    <ul *ngIf="uploadedSignedTORFiles.length">
+                                                        <li *ngFor="let file of uploadedSignedTORFiles">{{file.name}} - {{file.size}} bytes
+                                                        </li>
+                                                    </ul>
+                                                </ng-template>
+                                            </p-fileUpload>
+                                        </div>
+                                    </div>
+                                </tab>
+                            </tabset>
+
+
+
+                        </div>
+                    </div>
+                
+            </div>
+        </form>
+
+        <requestAreaLookupTableModal #requestAreaLookupTableModal (modalSave)="getNewRequestAreaId()">
+        </requestAreaLookupTableModal>
+        <requestDomainLookupTableModal #requestDomainLookupTableModal (modalSave)="getNewRequestDomainId()">
+        </requestDomainLookupTableModal>
+        <userLookupTableModal #userLookupTableModal (modalSave)="getNewRequestorId()"></userLookupTableModal>
+        <userLookupTableModal #userLookupTableModal2 (modalSave)="getNewRequestorPartnerId()"></userLookupTableModal>
+        <userLookupTableModal #userLookupTableModal3 (modalSave)="getNewRequestorManagerId()"></userLookupTableModal>
+        <clientListLookupTableModal #clientListLookupTableModal (modalSave)="getNewClientListId()">
+        </clientListLookupTableModal>
+        <userLookupTableModal #userLookupTableModal4 (modalSave)="getNewAssigneeId()"></userLookupTableModal>
+        <userLookupTableModal #userLookupTableModal5 (modalSave)="getNewTechTeamMember()"></userLookupTableModal>
+        <createOrEditClientListModal #createOrEditClientListModal (modalSave)="getNewClientList($event)"></createOrEditClientListModal>
+    </div>
+</div>

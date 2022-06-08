@@ -1,0 +1,68 @@
+<div bsModal #createOrEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrEditModal" aria-hidden="true" [config]="{backdrop: 'static'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form *ngIf="active" #requestThreadForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span *ngIf="requestThread.id">{{l("EditRequestThread")}}</span>
+                        <span *ngIf="!requestThread.id">{{l("CreateNewRequestThread")}}</span>
+                    </h4>
+                    <button type="button" class="close" (click)="close()" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                 
+
+					<div class="form-group m-form__group">
+                        <label for="RequestLocalChargeCode">{{l("Request")}}</label>
+                        <div class="input-group">
+                            <input class="form-control" id="RequestLocalChargeCode" name="requestLocalChargeCode" [(ngModel)]="requestLocalChargeCode" type="text" disabled>     
+                            <div class="input-group-append">
+                                <button class="btn btn-primary blue" (click)="openSelectRequestModal()" type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
+                            </div> <div class="input-group-prepend">
+                                <button class="btn btn-danger" type="button" (click)="setRequestIdNull()"><i class="fa fa-close"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <input class="form-control" name="requestThread.requestId" [(ngModel)]="requestThread.requestId" type="text"  hidden>
+		 
+					<div class="form-group m-form__group">
+                        <label for="UserName">{{l("User")}}</label>
+                        <div class="input-group">
+                            <input class="form-control" id="UserName" name="userName" [(ngModel)]="userName" type="text" disabled>     
+                            <div class="input-group-append">
+                                <button class="btn btn-primary blue" (click)="openSelectUserModal()" type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
+                            </div> <div class="input-group-prepend">
+                                <button class="btn btn-danger" type="button" (click)="setCommentByIdNull()"><i class="fa fa-close"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <input class="form-control" name="requestThread.commentById" [(ngModel)]="requestThread.commentById" type="text"  hidden>
+		 
+
+								<div class="form-group">
+									<label for="RequestThread_Comment">{{l("Comment")}}</label>
+									<input type="text" id="RequestThread_Comment" class="form-control" [(ngModel)]="requestThread.comment" name="Comment"    />
+								</div>
+					
+								<div class="form-group m-form__group row">
+									<label for="RequestThread_CommentDate"  class="col-md-12">{{l("CommentDate")}}</label>
+									<div class="col-lg-10 col-md-9 col-sm-8">
+										<input class="form-control m-input" type="datetime" bsDatepicker datePickerMomentModifier [(date)]="requestThread.commentDate" id="RequestThread_CommentDate">
+									</div>
+								</div>
+					
+
+                </div>
+                <div class="modal-footer">
+                    <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                    <button type="submit" class="btn btn-primary blue" [disabled]="!requestThreadForm.form.valid" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+<requestLookupTableModal #requestLookupTableModal (modalSave)="getNewRequestId()"></requestLookupTableModal>
+		 <userLookupTableModal #userLookupTableModal (modalSave)="getNewCommentById()"></userLookupTableModal>
+		 
+</div>

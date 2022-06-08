@@ -1,0 +1,82 @@
+<div bsModal #createOrEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrEditModal" aria-hidden="true" [config]="{backdrop: 'static'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form *ngIf="active" #requestDocForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span *ngIf="requestDoc.id">{{l("EditRequestDoc")}}</span>
+                        <span *ngIf="!requestDoc.id">{{l("CreateNewRequestDoc")}}</span>
+                    </h4>
+                    <button type="button" class="close" (click)="close()" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                 
+
+					<div class="form-group m-form__group">
+                        <label for="RequestLocalChargeCode">{{l("Request")}}</label>
+                        <div class="input-group">
+                            <input class="form-control" id="RequestLocalChargeCode" name="requestLocalChargeCode" [(ngModel)]="requestLocalChargeCode" type="text" disabled>     
+                            <div class="input-group-append">
+                                <button class="btn btn-primary blue" (click)="openSelectRequestModal()" type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
+                            </div> <div class="input-group-prepend">
+                                <button class="btn btn-danger" type="button" (click)="setRequestIdNull()"><i class="fa fa-close"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <input class="form-control" name="requestDoc.requestId" [(ngModel)]="requestDoc.requestId" type="text"  hidden>
+		 
+					<div class="form-group m-form__group">
+                        <label for="UserName">{{l("User")}}</label>
+                        <div class="input-group">
+                            <input class="form-control" id="UserName" name="userName" [(ngModel)]="userName" type="text" disabled>     
+                            <div class="input-group-append">
+                                <button class="btn btn-primary blue" (click)="openSelectUserModal()" type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
+                            </div> <div class="input-group-prepend">
+                                <button class="btn btn-danger" type="button" (click)="setPreparerIdNull()"><i class="fa fa-close"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <input class="form-control" name="requestDoc.preparerId" [(ngModel)]="requestDoc.preparerId" type="text"  hidden>
+		 
+
+								<div class="form-group">
+									<label for="RequestDoc_DocumentName">{{l("DocumentName")}}</label>
+									<input type="text" id="RequestDoc_DocumentName" class="form-control" [(ngModel)]="requestDoc.documentName" name="DocumentName"   minlength="1"  maxlength="100" />
+								</div>
+					
+								<div class="form-group">
+									<label for="RequestDoc_DocumentLocation">{{l("DocumentLocation")}}</label>
+									<input type="text" id="RequestDoc_DocumentLocation" class="form-control" [(ngModel)]="requestDoc.documentLocation" name="DocumentLocation"   minlength="1"  maxlength="200" />
+								</div>
+					
+								<div class="form-group">
+									<label for="RequestDoc_PreparerTypeId">{{l("PreparerTypeId")}}</label>
+									<select class="form-control" name="PreparerTypeId" id="RequestDoc_PreparerTypeId" [(ngModel)]="requestDoc.preparerTypeId">
+									<option value="0">{{l('Enum_StaffEntityType_0')}}</option>
+
+									<option value="1">{{l('Enum_StaffEntityType_1')}}</option>
+
+
+									</select>
+								</div>
+					
+								<div class="form-group">
+									<label for="RequestDoc_DocumentGUID">{{l("DocumentGUID")}}</label>
+									<input type="text" id="RequestDoc_DocumentGUID" class="form-control" [(ngModel)]="requestDoc.documentGUID" name="DocumentGUID"    />
+								</div>
+					
+
+                </div>
+                <div class="modal-footer">
+                    <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                    <button type="submit" class="btn btn-primary blue" [disabled]="!requestDocForm.form.valid" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+<requestLookupTableModal #requestLookupTableModal (modalSave)="getNewRequestId()"></requestLookupTableModal>
+		 <userLookupTableModal #userLookupTableModal (modalSave)="getNewPreparerId()"></userLookupTableModal>
+		 
+</div>

@@ -1,0 +1,344 @@
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="'Users' | localize" [description]="'UsersHeaderInfo' | localize">
+            <div role="actions">
+                <button *ngIf="isGranted('Pages.Requests.Create')" (click)="navigateToCreateRequestPage()"
+                    class="btn btn-primary m-btn--pill pull-right">
+                    <i class="fa fa-plus"></i> Create Request
+                </button>
+                <button *ngIf="isGranted('Pages.Tenant.Dashboard')" (click)="navigateToDashboardPage()"
+                    class="btn btn-info m-btn--pill pull-right">
+                    <i class="fa fa-bar-chart"></i> Dashboard
+                </button>
+            </div>
+        </sub-header>
+
+        <div class="m-subheader">
+            <div class="d-flex align-items-center">
+                <div class="mr-auto">
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <span></span>
+                    </h3>
+                    <span class="m-section__sub">
+
+                    </span>
+                </div>
+                
+            </div>
+        </div>
+
+        <div [class]="containerClass">
+            <div class="row" *ngIf="loadingRequests">
+                <div class="col-xl-12 text-center">
+                    <i class="fa fa-spinner fa-pulse fa-5x fa-fw" style="font-size: 100px;"></i>
+                </div>
+            </div>
+
+            <div *ngIf="!loadingRequests" class="m-accordion m-accordion--default m-accordion--toggle-arrow"
+                id="m_accordion_5" role="tablist">
+
+                <!--begin::Item-->
+                <div class="m-accordion__item m-accordion__item--warning">
+                    <div class="m-accordion__item-head collapsed" srole="tab" id="m_accordion_5_item_1_head" data-toggle="collapse"
+                        href="#m_accordion_5_item_1_body" aria-expanded="false">
+                        <span class="m-accordion__item-icon"><i class="fa flaticon-file-1"></i></span>
+                        <span class="m-accordion__item-title">Open Requests</span>
+                        <span class="m-accordion__item-mode"></span>
+                    </div>
+                    <div class="m-accordion__item-body collapse" id="m_accordion_5_item_1_body" role="tabpanel"
+                        aria-labelledby="m_accordion_5_item_1_head" data-parent="#m_accordion_5" style="">
+                        <div class="m-accordion__item-content">
+                            <ul class="request grid">
+                                <li class="request-item" *ngFor="let request of requests"
+                                    (click)="navigateToViewRequestPage(request.request.id)">
+
+                                    <span class="request-user list-only">
+                                        By {{ request.requestorName }}
+                                    </span>
+
+                                    <span class="request-code">
+                                        #{{ request.request.requestNo }}
+                                    </span>
+
+                                    <span class="request-user grid-only">
+                                        By {{ request.requestorName }}
+                                    </span>
+
+                                    <div class="pull-left request-details">
+
+                                        <span class="request-progress pull-right">
+                                            <span class="request-progress-labels">
+                                                <span class="request-completes">
+                                                    {{ request.nextAction}}
+                                                </span>
+                                                <span class="request-progress-label">
+                                                    {{request.percentageComplete}}%
+                                                </span>
+                                            </span>
+                                        </span>
+
+                                        <span class="request-date ended">
+                                            {{ request.request.submissionDate | momentFormat:'LL' }}
+                                        </span>
+                                        <span class="request-date client">
+                                            {{ request.clientListClientName }}
+                                        </span>
+                                        <span class="request-date type">
+                                            {{l('Enum_RequestType_' + request.request.requestTypeId)}}
+                                        </span>
+                                        <span class="request-stage">
+                                            <span
+                                                class="m-badge m-badge--{{getStatusClass(request.request.requestStatusId)}} m-badge--wide">
+                                                {{l('Enum_RequestStatus_' + request.request.requestStatusId)}}
+                                            </span>
+                                        </span>
+                                    </div>
+                                </li>
+
+                                <!-- <li class="survey-item">    
+                                                <span class="survey-country list-only">
+                                                US
+                                                </span>
+                                                
+                                                <span class="survey-name">
+                                                Pepsi Tracker New Orleans
+                                                </span>
+                                                
+                                                <span class="survey-country grid-only">
+                                                US
+                                                </span>
+                                                
+                                                <div class="pull-right">
+                                                
+                                                <span class="survey-progress">
+                                                    <span class="survey-progress-bg">
+                                                    <span class="survey-progress-fg" style="width: 25%;"></span>
+                                                    </span>
+                                                    
+                                                    <span class="survey-progress-labels">
+                                                    <span class="survey-progress-label">
+                                                        25%
+                                                    </span>
+                                            
+                                                    <span class="survey-completes">
+                                                        150 / 500
+                                                    </span>
+                                                    </span>
+                                                </span>
+                                                
+                                                <span class="survey-end-date">
+                                                    2014 - July 12
+                                                </span>
+                                                <span class="survey-stage">
+                                                    <span class="stage draft">Draft</span>
+                                                    <span class="stage awarded">Awarded</span>
+                                                    <span class="stage live active">Live</span>
+                                                    <span class="stage ended">Ended</span>        
+                                                </span>
+                                                </div>
+                                            </li>
+                                            <li class="survey-item">
+                                                <span class="survey-country list-only">
+                                                US
+                                                </span>
+                                                
+                                                <span class="survey-name">
+                                                Global Music Brand Tracker
+                                                </span>
+                                                
+                                                <span class="survey-country grid-only">
+                                                US
+                                                </span>
+                                                
+                                                <div class="pull-right">
+                                                <span class="survey-end-date">
+                                                    2014 - Oct 1
+                                                </span>
+                                                <span class="survey-stage">
+                                                    <span class="stage draft">Draft</span>
+                                                    <span class="stage awarded active">Awarded</span>
+                                                    <span class="stage live">Live</span>
+                                                    <span class="stage ended">Ended</span>        
+                                                </span>
+                                                </div>
+                                            </li> -->
+                            </ul>
+
+
+                            <ul class="request list" *ngIf="requests.length == 0 && !loadingRequests">
+                                <li class="request-item">
+
+                                    <span class="request-user list-only">
+                                        {{l('NoData')}}
+                                    </span>
+
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!--end::Item-->
+
+                <!--begin::Item-->
+                <div class="m-accordion__item m-accordion__item--success">
+                    <div class="m-accordion__item-head collapsed" role="tab" id="m_accordion_5_item_2_head"
+                        data-toggle="collapse" href="#m_accordion_5_item_2_body" aria-expanded="    false">
+                        <span class="m-accordion__item-icon"><i class="fa  flaticon-interface-5"></i></span>
+                        <span class="m-accordion__item-title">Completed Requests</span>
+                        <span class="m-accordion__item-mode"></span>
+                    </div>
+                    <div class="m-accordion__item-body collapse" id="m_accordion_5_item_2_body" role="tabpanel"
+                        aria-labelledby="m_accordion_5_item_2_head" data-parent="#m_accordion_5">
+                        <div class="m-accordion__item-content">
+                            <ul class="request grid">
+                                <li class="request-item" *ngFor="let request of completedRequests"
+                                    (click)="navigateToViewRequestPage(request.request.id)">
+
+                                    <span class="request-user list-only">
+                                        By {{ request.requestorName }}
+                                    </span>
+
+                                    <span class="request-code">
+                                        #{{ request.request.requestNo }}
+                                    </span>
+
+                                    <span class="request-user grid-only">
+                                        By {{ request.requestorName }}
+                                    </span>
+
+                                    <div class="pull-left request-details">
+
+                                        <span class="request-progress pull-right">
+                                            <span class="request-progress-labels">
+                                                <span class="request-completes">
+                                                    {{ request.nextAction}}
+                                                </span>
+                                                <span class="request-progress-label">
+                                                    {{request.percentageComplete}}%
+                                                </span>
+                                            </span>
+                                        </span>
+
+                                        <span class="request-date ended">
+                                            {{ request.request.submissionDate | momentFormat:'LL' }}
+                                        </span>
+                                        <span class="request-date client">
+                                            {{ request.clientListClientName }}
+                                        </span>
+                                        <span class="request-date type">
+                                            {{l('Enum_RequestType_' + request.request.requestTypeId)}}
+                                        </span>
+                                        <span class="request-stage">
+                                            <span
+                                                class="m-badge m-badge--{{getStatusClass(request.request.requestStatusId)}} m-badge--wide">
+                                                {{l('Enum_RequestStatus_' + request.request.requestStatusId)}}
+                                            </span>
+                                        </span>
+                                    </div>
+                                </li>
+
+                                <!-- <li class="survey-item">    
+                                                <span class="survey-country list-only">
+                                                US
+                                                </span>
+                                                
+                                                <span class="survey-name">
+                                                Pepsi Tracker New Orleans
+                                                </span>
+                                                
+                                                <span class="survey-country grid-only">
+                                                US
+                                                </span>
+                                                
+                                                <div class="pull-right">
+                                                
+                                                <span class="survey-progress">
+                                                    <span class="survey-progress-bg">
+                                                    <span class="survey-progress-fg" style="width: 25%;"></span>
+                                                    </span>
+                                                    
+                                                    <span class="survey-progress-labels">
+                                                    <span class="survey-progress-label">
+                                                        25%
+                                                    </span>
+                                            
+                                                    <span class="survey-completes">
+                                                        150 / 500
+                                                    </span>
+                                                    </span>
+                                                </span>
+                                                
+                                                <span class="survey-end-date">
+                                                    2014 - July 12
+                                                </span>
+                                                <span class="survey-stage">
+                                                    <span class="stage draft">Draft</span>
+                                                    <span class="stage awarded">Awarded</span>
+                                                    <span class="stage live active">Live</span>
+                                                    <span class="stage ended">Ended</span>        
+                                                </span>
+                                                </div>
+                                            </li>
+                                            <li class="survey-item">
+                                                <span class="survey-country list-only">
+                                                US
+                                                </span>
+                                                
+                                                <span class="survey-name">
+                                                Global Music Brand Tracker
+                                                </span>
+                                                
+                                                <span class="survey-country grid-only">
+                                                US
+                                                </span>
+                                                
+                                                <div class="pull-right">
+                                                <span class="survey-end-date">
+                                                    2014 - Oct 1
+                                                </span>
+                                                <span class="survey-stage">
+                                                    <span class="stage draft">Draft</span>
+                                                    <span class="stage awarded active">Awarded</span>
+                                                    <span class="stage live">Live</span>
+                                                    <span class="stage ended">Ended</span>        
+                                                </span>
+                                                </div>
+                                            </li> -->
+                            </ul>
+
+
+                            <ul class="request list" *ngIf="completedRequests.length == 0 && !loadingRequests">
+                                <li class="request-item">
+
+                                    <span class="request-user list-only">
+                                        {{l('NoData')}}
+                                    </span>
+
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!--end::Item-->
+            </div>
+            <!-- <div class="row align-items-center mt-3">
+                <div class="offset-lg-6 col-lg-6 col-md-12">
+                    <div class="form-group m-form__group align-items-center mr-3">
+                        <div class="input-group">
+                            <input [(ngModel)]="filter" name="filterText"
+                                class="form-control m-input" [placeholder]="l('SearchWithThreeDot')"
+                                type="text">
+                            <span class="input-group-btn">
+                                <button (click)="getRequests()" class="btn btn-primary" type="submit"><i
+                                        class="flaticon-search-1"></i></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+
+    </div>
+</div>

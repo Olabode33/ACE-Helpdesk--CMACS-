@@ -1,0 +1,86 @@
+<div bsModal #createOrEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrEditModal" aria-hidden="true" [config]="{backdrop: 'static'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form *ngIf="active" #attachedDocForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span *ngIf="attachedDoc.id">{{l("EditAttachedDoc")}}</span>
+                        <span *ngIf="!attachedDoc.id">{{l("CreateNewAttachedDoc")}}</span>
+                    </h4>
+                    <button type="button" class="close" (click)="close()" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                 
+
+					<div class="form-group m-form__group">
+                        <label for="RequestRequestNo">{{l("Request")}}</label>
+                        <div class="input-group">
+                            <input class="form-control" id="RequestRequestNo" name="requestRequestNo" [(ngModel)]="requestRequestNo" type="text" disabled>     
+                            <div class="input-group-append">
+                                <button class="btn btn-primary blue" (click)="openSelectRequestModal()" type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
+                            </div> <div class="input-group-prepend">
+                                <button class="btn btn-danger" type="button" (click)="setRequestIdNull()"><i class="fa fa-close"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <input class="form-control" name="attachedDoc.requestId" [(ngModel)]="attachedDoc.requestId" type="text"  hidden>
+		 
+					<div class="form-group m-form__group">
+                        <label for="UserName">{{l("User")}}</label>
+                        <div class="input-group">
+                            <input class="form-control" id="UserName" name="userName" [(ngModel)]="userName" type="text" disabled>     
+                            <div class="input-group-append">
+                                <button class="btn btn-primary blue" (click)="openSelectUserModal()" type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
+                            </div> <div class="input-group-prepend">
+                                <button class="btn btn-danger" type="button" (click)="setDocOwnerIdNull()"><i class="fa fa-close"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <input class="form-control" name="attachedDoc.docOwnerId" [(ngModel)]="attachedDoc.docOwnerId" type="text"  hidden>
+		 
+					<div class="form-group m-form__group">
+                        <label for="BinaryObjectTenantId">{{l("BinaryObject")}}</label>
+                        <div class="input-group">
+                            <input class="form-control" id="BinaryObjectTenantId" name="binaryObjectTenantId" [(ngModel)]="binaryObjectTenantId" type="text" disabled>     
+                            <div class="input-group-append">
+                                <button class="btn btn-primary blue" (click)="openSelectBinaryObjectModal()" type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
+                            </div> <div class="input-group-prepend">
+                                <button class="btn btn-danger" type="button" (click)="setDocumentIdNull()"><i class="fa fa-close"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <input class="form-control" name="attachedDoc.documentId" [(ngModel)]="attachedDoc.documentId" type="text"  hidden>
+		 
+
+								<div class="form-group">
+									<label for="AttachedDoc_FileName">{{l("FileName")}}</label>
+									<input type="text" id="AttachedDoc_FileName" class="form-control" [(ngModel)]="attachedDoc.fileName" name="FileName"    />
+								</div>
+					
+								<div class="form-group">
+									<label for="AttachedDoc_DocOwnerTypeId">{{l("DocOwnerTypeId")}}</label>
+									<select class="form-control" name="DocOwnerTypeId" id="AttachedDoc_DocOwnerTypeId" [(ngModel)]="attachedDoc.docOwnerTypeId">
+									<option value="0">{{l('Enum_StaffEntityType_0')}}</option>
+
+									<option value="1">{{l('Enum_StaffEntityType_1')}}</option>
+
+
+									</select>
+								</div>
+					
+
+                </div>
+                <div class="modal-footer">
+                    <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                    <button type="submit" class="btn btn-primary blue" [disabled]="!attachedDocForm.form.valid" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+<requestLookupTableModal #requestLookupTableModal (modalSave)="getNewRequestId()"></requestLookupTableModal>
+		 <userLookupTableModal #userLookupTableModal (modalSave)="getNewDocOwnerId()"></userLookupTableModal>
+		 <binaryObjectLookupTableModal #binaryObjectLookupTableModal (modalSave)="getNewDocumentId()"></binaryObjectLookupTableModal>
+		 
+</div>

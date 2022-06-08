@@ -1,0 +1,192 @@
+<div [@routerTransition]>
+    <div class="m-subheader">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto col-md-6">
+                <h3 class="m-subheader__title m-subheader__title--separator">
+                    <span>{{l("RequestThreads")}}</span>
+                </h3>
+                <span class="m-section__sub">
+                    {{l("RequestThreadsHeaderInfo")}}
+                </span>
+            </div>
+            <div class="col-md-6 text-right">
+				<button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel-o"></i> {{l("ExportToExcel")}}</button>
+                <button *ngIf="isGranted('Pages.RequestThreads.Create')" (click)="createRequestThread()" 
+			class="btn btn-primary blue"><i class="fa fa-plus"></i> {{l("CreateNewRequestThread")}}</button>
+            </div>
+        </div>
+    </div>
+    <div [class]="containerClass">
+        <div class="card card-custom gutter-b">
+            <div class="card-body">
+
+				<form class="horizontal-form" autocomplete="off">
+                    <div class="m-form m-form--label-align-right">
+                        <div class="row align-items-center m--margin-bottom-10">
+                            <div class="col-xl-12">
+                                <div class="form-group m-form__group align-items-center">
+                                    <div class="input-group">
+                                        <input [(ngModel)]="filterText" name="filterText" autoFocus class="form-control m-input" [placeholder]="l('SearchWithThreeDot')" type="text">
+                                        <span class="input-group-btn">
+                                            <button (click)="getRequestThreads()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+						 <div class="row m--margin-bottom-10" [hidden]="!advancedFiltersAreShown">
+						 	<div class="col-md-12">
+						         <div class="m-separator m-separator--dashed"></div>
+						     </div>
+
+
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="CommentFilter">{{l("Comment")}}</label>
+									<input type="text" class="form-control" id="CommentFilter" name="commentFilter" [(ngModel)]="commentFilter">
+								</div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+									<label  for="MinCommentDateFilter">{{l("MinMax")}} {{l("CommentDate")}}</label>
+									<div class="input-group">
+                                        <input class="form-control m-input" id="MinCommentDateFilter" type="datetime"  placeholder="{{l('MinValue')}}" 
+                                            bsDatepicker datePickerMomentModifier [(date)]="minCommentDateFilter">
+                                        <input class="form-control m-input" type="datetime"  placeholder="{{l('MaxValue')}}" 
+                                            bsDatepicker datePickerMomentModifier [(date)]="maxCommentDateFilter">
+									</div>
+                                </div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="RequestLocalChargeCodeFilter">({{l("Request")}}) {{l("LocalChargeCode")}}</label>
+									<input type="text" class="form-control" id="RequestLocalChargeCodeFilter" name="requestLocalChargeCodeFilter" [(ngModel)]="requestLocalChargeCodeFilter">
+                                </div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="UserNameFilter">({{l("User")}}) {{l("Name")}}</label>
+									<input type="text" class="form-control" id="UserNameFilter" name="userNameFilter" [(ngModel)]="userNameFilter">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row margin-bottom-10">
+                            <div class="col-sm-12">
+                                <span class="clickable-item text-muted" *ngIf="!advancedFiltersAreShown" (click)="advancedFiltersAreShown=!advancedFiltersAreShown"><i class="fa fa-angle-down"></i> {{l("ShowAdvancedFilters")}}</span>
+                                <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown" (click)="advancedFiltersAreShown=!advancedFiltersAreShown"><i class="fa fa-angle-up"></i> {{l("HideAdvancedFilters")}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="row align-items-center">
+                    <!--<Primeng-Datatable-Start>-->
+                    <div class="primeng-datatable-container"
+                         [busyIf]="primengTableHelper.isLoading">
+                        <p-table #dataTable
+                                     (onLazyLoad)="getRequestThreads($event)"
+                                     [value]="primengTableHelper.records"
+                                     rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
+                                     [paginator]="false"
+                                     [lazy]="true"
+                                     [scrollable]="true"
+                                     ScrollWidth="100%"
+                                     [responsive]="primengTableHelper.isResponsive"
+                                     [resizableColumns]="primengTableHelper.resizableColumns">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width: 130px" [hidden]="!isGrantedAny('Pages.RequestThreads.Edit', 'Pages.RequestThreads.Delete')">{{l('Actions')}}</th>
+                                    <th style="width: 150px" pSortableColumn="requestLocalChargeCode">
+                                        {{l('LocalChargeCode')}}
+                                        <p-sortIcon field="requestLocalChargeCode"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="userName">
+                                        {{l('Name')}}
+                                        <p-sortIcon field="userName"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="requestThread.comment">
+                                        {{l('Comment')}}
+                                        <p-sortIcon field="requestThread.comment"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="requestThread.commentDate">
+                                        {{l('CommentDate')}}
+                                        <p-sortIcon field="requestThread.commentDate"></p-sortIcon>
+                                    </th>
+
+                                </tr>
+                            </ng-template>                           
+							<ng-template pTemplate="body" let-record="$implicit">
+                                <tr>
+                                    <td style="width: 130px"
+                                        [hidden]="!isGrantedAny('Pages.RequestThreads.Edit', 'Pages.RequestThreads.Delete')">
+                                        <div class="btn-group dropdown" normalizePosition>
+                                            <button class="dropdown-toggle btn btn-sm btn-primary"
+                                                    data-toggle="dropdown"
+                                                    aria-haspopup="true"
+                                                    aria-expanded="false">
+                                                <i class="fa fa-cog"></i><span class="caret"></span> {{l("Actions")}}
+                                            </button>
+												<ul class="dropdown-menu">
+												<li>
+													<a 
+														(click)="viewRequestThreadModal.show(record)">{{l('View')}}</a>
+												</li>
+												<li>
+													<a *ngIf="permission.isGranted('Pages.RequestThreads.Edit')"
+														(click)="createOrEditRequestThreadModal.show(record.requestThread.id)">{{l('Edit')}}</a>
+												</li>
+												<li>
+											        <a *ngIf="permission.isGranted('Pages.RequestThreads.Delete')"
+														(click)="deleteRequestThread(record.requestThread)">{{l('Delete')}}</a>
+												</li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td style="width:150px">
+												<span class="ui-column-title"> {{l('LocalChargeCode')}}</span>
+												{{record.requestLocalChargeCode}}
+											</td>
+                                    <td style="width:150px">
+												<span class="ui-column-title"> {{l('Name')}}</span>
+												{{record.userName}}
+											</td>
+                                    <td style="width:150px">
+											<span class="ui-column-title"> {{l('Comment')}}</span>
+											{{record.requestThread.comment}}
+										</td>
+                                    <td style="width:150px">
+										<span class="ui-column-title"> {{l('CommentDate')}}</span>
+                                        <span *ngIf="record.requestThread.commentDate">
+											{{record.requestThread.commentDate | momentFormat:'L'}}
+                                        </span>
+                                        <span *ngIf="!record.requestThread.commentDate">-</span>
+                                    </td>
+
+                                </tr>
+                            </ng-template>
+                        </p-table>
+						<div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                            {{l('NoData')}}
+                        </div>
+                        <div class="primeng-paging-container">
+                            <p-paginator rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
+                                         #paginator
+                                         (onPageChange)="getRequestThreads($event)"
+                                         [totalRecords]="primengTableHelper.totalRecordsCount"
+                                         [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
+                            </p-paginator>
+                            <span class="total-records-count">
+                                {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}
+                            </span>
+                        </div>
+                    </div>
+                    <!--<Primeng-Datatable-End>-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <createOrEditRequestThreadModal #createOrEditRequestThreadModal (modalSave)="getRequestThreads()"></createOrEditRequestThreadModal>
+    <viewRequestThreadModal #viewRequestThreadModal></viewRequestThreadModal>
+</div>

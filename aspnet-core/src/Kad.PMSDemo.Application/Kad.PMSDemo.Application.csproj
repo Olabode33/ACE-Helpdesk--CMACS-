@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\common.props"></Import>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
+    <AssemblyName>Kad.PMSDemo.Application</AssemblyName>
+    <PackageId>Kad.PMSDemo.Application</PackageId>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <RootNamespace>Kad.PMSDemo</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Abp.EntityFrameworkCore.EFPlus" Version="5.13.0" />
+    <PackageReference Include="NPOI" Version="2.5.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Kad.PMSDemo.Application.Shared\Kad.PMSDemo.Application.Shared.csproj" />
+    <ProjectReference Include="..\Kad.PMSDemo.Core\Kad.PMSDemo.Core.csproj" />
+    <ProjectReference Include="..\Kad.PMSDemo.EntityFrameworkCore\Kad.PMSDemo.EntityFrameworkCore.csproj" />
+  </ItemGroup>
+</Project>

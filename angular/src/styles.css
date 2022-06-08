@@ -1,0 +1,387 @@
+/* You can add global styles to this file, and also import other style files */
+/* You can add global styles to this file, and also import other style files */
+:root {
+    /*
+    --main-bg-color: #06AED5;  
+    --accent-color: #FA794B;
+    */
+    --main-bg-color: #2d2d2d;  
+    --accent-color: #d93954;
+    --brand-black: #070707;
+    --menu-black: #202c39;
+    --menu-highlight: #283845;
+}
+
+body {
+    background-image: url(/assets/common/images/bg/bg-2.jpg) !important;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+
+
+.margin-left-5 {
+    margin-left: 5px !important;
+}
+
+.margin-right-5 {
+    margin-right: 5px !important;
+}
+
+.margin-top-5 {
+    margin-top: 5px !important;
+}
+
+.margin-top-15 {
+    margin-top: 15px !important;
+}
+
+.margin-bottom-5 {
+    margin-bottom: 5px !important;
+}
+
+.margin-bottom-5 {
+    margin-bottom: 5px !important;
+}
+
+.margin-bottom-15 {
+    margin-bottom: 15px !important;
+}
+
+.padding-left-5 {
+    padding-left: 5px !important;
+}
+
+.padding-right-5 {
+    padding-right: 5px !important;
+}
+
+.padding-top-5 {
+    padding-top: 5px !important;
+}
+
+.padding-bottom-5 {
+    padding-bottom: 5px !important;
+}
+
+.width-percent-5 {
+    width: 5%;
+}
+
+.width-percent-10 {
+    width: 10%;
+}
+
+.width-percent-15 {
+    width: 15%;
+}
+
+.width-percent-20 {
+    width: 20%;
+}
+
+.width-percent-30 {
+    width: 30%;
+}
+
+.width-percent-40 {
+    width: 40%;
+}
+
+.width-percent-50 {
+    width: 50%;
+}
+
+.width-percent-100 {
+    width: 100%;
+}
+
+/* Sweet alert */
+
+.swal2-title {
+    display: inline-block !important;
+}
+
+body.swal2-height-auto {
+    height: inherit !important;
+}
+
+.swal2-popup.swal2-toast {
+    padding: 10px 12px !important;
+    display: block !important;
+}
+
+.swal2-popup.swal2-toast .swal2-header,
+.swal2-popup.swal2-toast .swal2-title,
+.swal2-popup.swal2-toast .swal2-content {
+    text-align: left !important;
+    margin: 0 !important;
+}
+
+.swal2-popup.swal2-toast .swal2-title {
+    margin-bottom: 4px !important;
+}
+
+.swal2-icon.swal2-info::before,
+.swal2-icon.swal2-warning::before,
+.swal2-icon.swal2-success::before,
+.swal2-icon.swal2-error::before {
+    content: "";
+}
+
+@keyframes glowing {
+    0% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.3;
+    }
+}
+
+.glowing {
+    animation: glowing 2s infinite;
+}
+
+.root-initial-loader .overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(51, 51, 51, 0.8);
+    z-index: 99999 !important;
+    width: 100%;
+    height: 100%;
+}
+
+.root-initial-loader i {
+    position: absolute;
+    color: rgb(91, 167, 234);
+    z-index: 100000 !important;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.root-initial-loader .fa-spin-2x {
+    -webkit-animation: fa-spin 1s infinite linear;
+    animation: fa-spin 1s infinite linear;
+}
+ngx-spinner .loading-text {
+    font-weight: bold;
+    color: white;
+    font-size: 1.3em;
+}
+
+
+
+/** Custom styling **/
+.bg-image {
+    background: url('/assets/common/images/bg/bg-2.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.brand-color {
+    background: var(--main-bg-color) !important;
+}
+
+.brand-bg-color {
+    background: var(--main-bg-color) !important;
+    color: #fff;
+}
+
+.brand-text-color {
+    color: var(--main-bg-color) !important;
+}
+
+/** Header/topbar style **/
+/* .m-topbar .m-topbar__nav.m-nav>.m-nav__item>.m-nav__link .m-nav__link-icon>i:before {
+    background: var(--accent-color) !important;
+} */
+
+#m_header_nav {
+    background-color: var(--main-bg-color);
+    color: #fff;
+}
+
+.m-topbar .m-topbar__nav.m-nav>.m-nav__item>.m-nav__link {
+    color: #fff !important;
+}
+
+.m-topbar .m-topbar__nav.m-nav>.m-nav__item.m-topbar__user-profile.m-topbar__user-profile--img.m-dropdown--arrow .m-dropdown__arrow {
+    color: #282a3c !important;
+}
+
+.m-dropdown__arrow .m-dropdown__arrow--center {
+    color: var(--main-bg-color) !important;
+}
+
+.m-dropdown.m-dropdown--align-center.m-dropdown--large .m-dropdown__wrapper {
+    width: 350px !important;
+    margin-left: -190px !important;
+}
+.m-topbar .m-topbar__nav.m-nav > .m-nav__item > .m-nav__link *{
+    color: #fff !important;
+}
+.m-topbar .m-topbar__nav.m-nav>.m-nav__item.m-topbar__notifications.m-topbar__notifications--img.m-dropdown--arrow .m-dropdown__arrow {
+    color: #282a3c !important;
+}
+/** End header/topbar style **/
+
+
+/** Menu Style **/
+.m-brand.m-brand--skin-dark {
+    background: var(--brand-black) !important;
+}
+.m-aside-left.m-aside-left--skin-dark {
+    background-color: var(--menu-black) !important;
+}
+.m-aside-menu .m-menu__nav>.m-menu__item.m-menu__item--active>.m-menu__link {
+    background: var(--menu-highlight) !important;
+}
+.m-aside-menu.m-aside-menu--skin-dark .m-menu__nav>.m-menu__item.m-menu__item--open {
+    background-color: var(--menu-highlight) !important;
+}
+.m-aside-menu.m-aside-menu--skin-dark .m-menu__nav>.m-menu__item:not(.m-menu__item--parent):not(.m-menu__item--open):not(.m-menu__item--expanded):not(.m-menu__item--active):hover {
+    background-color: var(--menu-highlight) !important;
+}
+.m-aside-left--minimize .m-aside-menu.m-aside-menu--submenu-skin-dark .m-menu__nav .m-menu__item:not([m-menu-submenu-mode='accordion']).m-menu__item--hover>.m-menu__submenu .m-menu__subnav, .m-aside-menu.m-aside-menu--dropdown.m-aside-menu--submenu-skin-dark .m-menu__nav .m-menu__item:not([m-menu-submenu-mode='accordion']).m-menu__item--hover>.m-menu__submenu .m-menu__subnav {
+    background-color: var(--menu-highlight) !important;
+}
+.m-aside-left--minimize .m-aside-menu.m-aside-menu--submenu-skin-dark .m-menu__nav.m-menu__nav--dropdown-submenu-arrow .m-menu__item.m-menu__item--hover>.m-menu__submenu>.m-menu__arrow, .m-aside-menu.m-aside-menu--dropdown.m-aside-menu--submenu-skin-dark .m-menu__nav.m-menu__nav--dropdown-submenu-arrow .m-menu__item.m-menu__item--hover>.m-menu__submenu>.m-menu__arrow {
+    color: var(--menu-highlight) !important;
+}
+.m-aside-menu .m-menu__nav>.m-menu__item.m-menu__item--active>.m-menu__link .m-menu__link-icon {
+    color: var(--accent-color) !important;
+}
+
+@media (min-width: 1025px) {
+    .m-aside-menu .m-menu__nav>.m-menu__item.m-menu__item--active>.m-menu__link .m-menu__link-icon {
+        color: var(--accent-color) !important;
+    }
+}
+/** End menu style **/
+
+
+/** button style **/
+.btn-primary {
+    background-color: var(--accent-color) !important;
+    border-color: var(--accent-color) !important;
+}
+.m-login.m-login--2.m-login-2--skin-3 .m-login__container .m-login__form .m-login__form-sub .m-link{
+    color: var(--accent-color) !important;
+}
+.m-login.m-login--2.m-login-2--skin-3 .m-login__container .m-login__form .m-login__form-sub .m-checkbox {
+    color: var(--accent-color) !important;
+}
+/** end button style **/
+
+
+/** Form input style **/
+.m-switch.m-switch--outline.m-switch--primary input:checked ~ span:after {
+    background-color: var(--accent-color) !important;
+}
+
+.form-control.focus,
+.form-control:focus {
+    border-color: var(--accent-color) !important;
+}
+/** End form input style **/
+
+
+/** Paginator style **/
+body .ui-paginator {
+    background-color: #fff !important;
+    border: 0 !important;
+    padding: 0;
+}
+.ui-table .ui-paginator-bottom {
+    text-align: right;
+}
+body .ui-paginator .ui-paginator-pages .ui-paginator-page {
+    border-radius: 50% !important;
+}
+.primeng-paging-container .ui-paginator span a.ui-state-active {
+    background-color: var(--accent-color) !important;
+    color: #fff !important;
+}
+/** end paginator style **/
+
+
+/** Datepicker style **/
+.theme-theme3 .bs-datepicker-head {
+    background-color: var(--main-bg-color) !important;
+}
+
+.theme-theme3 .bs-datepicker-body table td span.selected, .theme-theme3 .bs-datepicker-body table td.selected span, .theme-theme3 .bs-datepicker-body table td span[class*="select-"]:after, .theme-theme3 .bs-datepicker-body table td[class*="select-"] span:after {
+    background-color: var(--accent-color) !important;
+}
+
+.theme-theme3 .bs-datepicker-body table td.week span {
+    color: var(--accent-color) !important;
+}
+/** End datepicker style **/
+
+/** label style **/
+label {
+    font-weight: 600 !important;
+    font-size: 1.1em;
+}
+/** end label style **/
+
+/** Table style **/
+/* td {
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+} */
+/** End table style **/
+
+
+
+.m-tabs__item > .tab-title {
+    display: none;
+}
+
+  @media print {
+    .tab-content > .tab-pane {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        padding-bottom: 20px;
+        margin-bottom: 5%;
+        border-bottom: 1px solid rgba(0,0,0,.2);
+    }
+
+    .m-tabs-line {
+        display: none !important;
+    }
+
+    .m-tabs__item > .tab-title {
+        display: block;
+    }
+
+    .print-hidden-text {
+        display: none !important;
+    }
+
+    .ql-toolbar.ql-snow {
+        display: none !important;
+    }
+
+    .ql-container.ql-snow {
+        border-top: 1px solid #ccc !important;
+    }
+  }
+
+
+  .tab-content {
+      padding-top: 20px;
+  }

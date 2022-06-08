@@ -1,0 +1,52 @@
+﻿<div bsModal #createOrEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrEditModal" aria-hidden="true" [config]="{backdrop: 'static'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form *ngIf="active" #requestSubAreaForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span *ngIf="requestSubArea.id">{{l("EditRequestSubArea")}}</span>
+                        <span *ngIf="!requestSubArea.id">{{l("CreateNewRequestSubArea")}}</span>
+                    </h4>
+                    <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                 
+
+					<div class="form-group m-form__group">
+                        <label for="RequestAreaRequestAreaName">{{l("RequestArea")}}</label>
+                        <div class="input-group">
+                            <input class="form-control" id="RequestAreaRequestAreaName" name="requestAreaRequestAreaName" [(ngModel)]="requestAreaRequestAreaName" type="text" disabled>     
+                            <div class="input-group-append">
+                                <button class="btn btn-primary blue" (click)="openSelectRequestAreaModal()" type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
+                            </div> <div class="input-group-prepend">
+                                <button class="btn btn-danger btn-icon" type="button" (click)="setRequestAreaIdNull()"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <input class="form-control" name="requestSubArea.requestAreaId" [(ngModel)]="requestSubArea.requestAreaId" type="text" required hidden>
+		 
+
+								<div class="form-group">
+									<label for="RequestSubArea_Name">{{l("Name")}}</label>
+									<input type="text" id="RequestSubArea_Name" class="form-control" [(ngModel)]="requestSubArea.name" name="Name"    />
+								</div>
+					
+								<div class="form-group">
+									<label for="RequestSubArea_Description">{{l("Description")}}</label>
+									<input type="text" id="RequestSubArea_Description" class="form-control" [(ngModel)]="requestSubArea.description" name="Description"    />
+								</div>
+					
+
+                </div>
+                <div class="modal-footer">
+                    <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                    <button type="submit" class="btn btn-primary blue" [disabled]="!requestSubAreaForm.form.valid" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+<requestSubAreaRequestAreaLookupTableModal #requestSubAreaRequestAreaLookupTableModal (modalSave)="getNewRequestAreaId()"></requestSubAreaRequestAreaLookupTableModal>
+		 
+</div>

@@ -1,0 +1,74 @@
+<div bsModal #createOrEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrEditModal" aria-hidden="true" [config]="{backdrop: 'static'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form *ngIf="active" #techTeamForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span *ngIf="techTeam.id">{{l("EditTechTeam")}}</span>
+                        <span *ngIf="!techTeam.id">{{l("CreateNewTechTeam")}}</span>
+                    </h4>
+                    <button type="button" class="close" (click)="close()" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                 
+
+					<div class="form-group m-form__group">
+                        <label for="RequestLocalChargeCode">{{l("Request")}}</label>
+                        <div class="input-group">
+                            <input class="form-control" id="RequestLocalChargeCode" name="requestLocalChargeCode" [(ngModel)]="requestLocalChargeCode" type="text" disabled>     
+                            <div class="input-group-append">
+                                <button class="btn btn-primary blue" (click)="openSelectRequestModal()" type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
+                            </div> <div class="input-group-prepend">
+                                <button class="btn btn-danger" type="button" (click)="setRequestIdNull()"><i class="fa fa-close"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <input class="form-control" name="techTeam.requestId" [(ngModel)]="techTeam.requestId" type="text"  hidden>
+		 
+					<div class="form-group m-form__group">
+                        <label for="UserName">{{l("User")}}</label>
+                        <div class="input-group">
+                            <input class="form-control" id="UserName" name="userName" [(ngModel)]="userName" type="text" disabled>     
+                            <div class="input-group-append">
+                                <button class="btn btn-primary blue" (click)="openSelectUserModal()" type="button"><i class="fa fa-search"></i> {{l("Pick")}}</button>
+                            </div> <div class="input-group-prepend">
+                                <button class="btn btn-danger" type="button" (click)="setCMACSUserIdNull()"><i class="fa fa-close"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <input class="form-control" name="techTeam.cmacsUserId" [(ngModel)]="techTeam.cmacsUserId" type="text"  hidden>
+		 
+
+								<div class="form-group">
+									<label for="TechTeam_TimeCharge">{{l("TimeCharge")}}</label>
+									<input type="number" id="TechTeam_TimeCharge" class="form-control" [(ngModel)]="techTeam.timeCharge" name="TimeCharge"  />
+								</div>
+					
+								<div class="form-group">
+									<label for="TechTeam_Role">{{l("Role")}}</label>
+									<select class="form-control" name="Role" id="TechTeam_Role" [(ngModel)]="techTeam.role">
+									<option value="0">{{l('Enum_StaffCategory_0')}}</option>
+
+									<option value="1">{{l('Enum_StaffCategory_1')}}</option>
+
+									<option value="2">{{l('Enum_StaffCategory_2')}}</option>
+
+
+									</select>
+								</div>
+					
+
+                </div>
+                <div class="modal-footer">
+                    <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                    <button type="submit" class="btn btn-primary blue" [disabled]="!techTeamForm.form.valid" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+<requestLookupTableModal #requestLookupTableModal (modalSave)="getNewRequestId()"></requestLookupTableModal>
+		 <userLookupTableModal #userLookupTableModal (modalSave)="getNewCMACSUserId()"></userLookupTableModal>
+		 
+</div>

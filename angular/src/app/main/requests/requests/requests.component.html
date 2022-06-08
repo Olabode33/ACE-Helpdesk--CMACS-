@@ -1,0 +1,248 @@
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="'Requests' | localize" [description]="'List of all completed requests' | localize">
+            <div role="actions">
+                <!-- <button (click)="exportToExcel()" class="btn btn-outline-success m-btn--pill"><i
+                            class="fa fa-file-excel-o"></i>
+                        {{l("ExportToExcel")}}</button>
+                    <button *ngIf="isGranted('Pages.Requests.Create')" (click)="createRequest()goBack"
+                        class="btn btn-primary m-btn--pill"><i class="fa fa-plus"></i> {{l("CreateNewRequest")}}</button> -->
+                        <button (click)="goBack()" class="btn btn-outline-info m-btn--pill"><i class="fa fa-reply"></i>Go
+                            Back</button>
+            </div>
+        </sub-header>
+        <div [class]="containerClass">
+            <div class="card card-custom gutter-b">
+                <div class="card-body">
+    
+                    <form class="horizontal-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row align-items-center m--margin-bottom-10">
+                                <div class="col-xl-12">
+                                    <div class="form-group m-form__group align-items-center">
+                                        <div class="input-group">
+                                            <input [(ngModel)]="filterText" name="filterText" autoFocus
+                                                class="form-control m-input" [placeholder]="l('SearchWithThreeDot')"
+                                                type="text">
+                                            <span class="input-group-btn">
+                                                <button (click)="getRequests()" class="btn btn-primary" type="submit"><i
+                                                        class="flaticon-search-1"></i></button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row m--margin-bottom-10" [hidden]="!advancedFiltersAreShown">
+                                <div class="col-md-12">
+                                    <div class="m-separator m-separator--dashed"></div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="RequestStatusIdFilterSelect">{{l("RequestStatusId")}}</label>
+                                    <select class="form-control" name="RequestStatusIdFilter"
+                                        id="RequestStatusIdFilterSelect" [(ngModel)]="requestStatusIdFilter">
+                                        <option value="-1">{{l("All")}}</option>
+                                        <option value="0">{{l('Enum_RequestStatus_0')}}</option>
+    
+                                        <option value="1">{{l('Enum_RequestStatus_1')}}</option>
+    
+                                        <option value="2">{{l('Enum_RequestStatus_2')}}</option>
+    
+                                        <option value="3">{{l('Enum_RequestStatus_3')}}</option>
+    
+                                        <option value="4">{{l('Enum_RequestStatus_4')}}</option>
+    
+                                        <option value="5">{{l('Enum_RequestStatus_5')}}</option>
+    
+                                        <option value="6">{{l('Enum_RequestStatus_6')}}</option>
+    
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row margin-bottom-10">
+                                <!-- <div class="col-sm-12">
+                                    <span class="clickable-item text-muted" *ngIf="!advancedFiltersAreShown"
+                                        (click)="advancedFiltersAreShown=!advancedFiltersAreShown"><i
+                                            class="fa fa-angle-down"></i> {{l("ShowAdvancedFilters")}}</span>
+                                    <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown"
+                                        (click)="advancedFiltersAreShown=!advancedFiltersAreShown"><i
+                                            class="fa fa-angle-up"></i> {{l("HideAdvancedFilters")}}</span>
+                                </div> -->
+                            </div>
+                        </div>
+                    </form>
+    
+                    <div class="row align-items-center">
+                        <!--<Primeng-Datatable-Start>-->
+                        <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
+                            <p-table #dataTable sortMode="multiple" (onLazyLoad)="getRequests($event)"
+                                [value]="primengTableHelper.records"
+                                rows="{{primengTableHelper.defaultRecordsCountPerPage}}" [paginator]="false" [lazy]="true"
+                                [scrollable]="true" ScrollWidth="100%" [responsive]="primengTableHelper.isResponsive"
+                                [resizableColumns]="primengTableHelper.resizableColumns">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th style="width: 130px">{{l('Actions')}}</th>
+                                        <th style="width: 150px" pSortableColumn="request.submissionDate">
+                                            {{l('SubmissionDate')}}
+                                            <p-sortIcon field="request.submissionDate"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 150px" pSortableColumn="request.requestNo">
+                                            {{l('RequestNo')}}
+                                            <p-sortIcon field="request.requestStatusId"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 150px" pSortableColumn="clientListClientName">
+                                            {{l('Client')}}
+                                            <p-sortIcon field="clientListClientName"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 150px" pSortableColumn="requestAreaRequestAreaName">
+                                            {{l('Area')}}
+                                            <p-sortIcon field="requestAreaRequestAreaName"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 150px" pSortableColumn="requestDomainDomainName">
+                                            {{l('RequestDomain')}}
+                                            <p-sortIcon field="requestDomainDomainName"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 150px" pSortableColumn="userName">
+                                            {{l('Requested By')}}
+                                            <p-sortIcon field="userName"></p-sortIcon>
+                                        </th>
+    
+                                        <th style="width: 150px" pSortableColumn="managerName">
+                                            {{l('Manager')}}
+                                            <p-sortIcon field="managerName"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 150px" pSortableColumn="request.requestTypeId">
+                                            {{l('RequestType')}}
+                                            <p-sortIcon field="request.requestTypeId"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 150px" pSortableColumn="request.requestStatusId">
+                                            {{l('Status')}}
+                                            <p-sortIcon field="request.requestStatusId"></p-sortIcon>
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-record="$implicit">
+                                    <tr>
+                                        <td style="width: 130px">
+                                            <button (click)="navigateToViewRequestPage(record.request.id)"
+                                                class="btn btn-sm btn-primary m-btn--air">
+                                                <i class="fa fa-info-circle"></i> View
+                                            </button>
+                                            <!-- <div class="btn-group dropdown" normalizePosition>
+                                                <button class="dropdown-toggle btn btn-sm btn-primary"
+                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-cog"></i><span class="caret"></span> {{l("Actions")}}
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a (click)="navigateToViewRequestPage(record.request.id)">{{l('View')}}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a *ngIf="permission.isGranted('Pages.Requests.Edit') && record.request.requestStatusId == 0"
+                                                            (click)="editRequest(record.request)">{{l('Edit')}}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a *ngIf="permission.isGranted('Pages.Requests.Delete') && record.request.requestStatusId == 0"
+                                                            (click)="deleteRequest(record.request)">{{l('Delete')}}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a *ngIf="permission.isGranted('Pages.Requests.Assign') && (record.request.requestStatusId == 0 || record.request.requestStatusId == 1)"
+                                                            (click)="assignRequest(record.request)">{{l('AssignRequest')}}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a *ngIf="permission.isGranted('Pages.Requests.CreateTOR') && record.request.requestStatusId == 1"
+                                                            (click)="createTOR(record.request)">{{l('CreateTOR')}}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a *ngIf="permission.isGranted('Pages.Requests.ApproveTOR') && record.request.requestStatusId == 5"
+                                                            (click)="approveTOR(record.request)">{{l('ApproveTOR')}}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a *ngIf="permission.isGranted('Pages.Requests.Treat') && record.request.requestStatusId == 6"
+                                                            (click)="treatRequest(record.request)">{{l('TreatRequest')}}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a *ngIf="permission.isGranted('Pages.Requests.GetApproval') && record.request.requestStatusId == 6"
+                                                            (click)="sendRequestForApproval(record.request)">{{l('GetApproval')}}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a *ngIf="permission.isGranted('Pages.Requests.ApproveRequest') && record.request.requestStatusId == 2"
+                                                            (click)="approveRequest(record.request)">{{l('ApproveRequest')}}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a *ngIf="permission.isGranted('Pages.Requests.MarkAsCompleted') && record.request.requestStatusId == 7"
+                                                            (click)="markAsCompleted(record.request)">{{l('Mark As Completed')}}</a>
+                                                    </li>
+                                                </ul>
+                                            </div> -->
+                                        </td>
+                                        <td style="width:150px">
+                                            <span class="ui-column-title"> {{l('SubmissionDate')}}</span>
+                                            <span *ngIf="record.request.submissionDate">
+                                                {{record.request.submissionDate | momentFormat:'L'}}
+                                            </span>
+                                            <span *ngIf="!record.request.submissionDate">-</span>
+                                        </td>
+                                        <td style="width:150px">
+                                            <span class="ui-column-title"> {{l('RequestNo')}}</span>
+                                            {{record.request.requestNo}}
+                                        </td>
+                                        <td style="width:150px">
+                                            <span class="ui-column-title"> {{l('Client')}}</span>
+                                            {{record.clientListClientName}}
+                                        </td>
+                                        <td style="width:150px">
+                                            <span class="ui-column-title"> {{l('Area')}}</span>
+                                            {{record.requestAreaRequestAreaName}}
+                                        </td>
+                                        <td style="width:150px">
+                                            <span class="ui-column-title"> {{l('Domain')}}</span>
+                                            {{record.requestDomainDomainName}}
+                                        </td>
+                                        <td style="width:150px">
+                                            <span class="ui-column-title"> {{l('Requested By')}}</span>
+                                            {{record.requestorName}}
+                                        </td>
+                                        <td style="width:150px">
+                                            <span class="ui-column-title"> {{l('Manager')}}</span>
+                                            {{record.managerName}}
+                                        </td>
+                                        <td style="width:150px">
+                                            <span class="ui-column-title"> {{l('RequestType')}}</span>
+                                            {{l('Enum_RequestType' + requestType[record.request.requestTypeId])}}
+                                        </td>
+                                        <td style="width:150px">
+                                            <span class="ui-column-title"> {{l('Status')}}</span>
+                                            <span
+                                                class="m-badge m-badge--{{getStatusClass(record.request.requestStatusId)}} m-badge--wide">
+                                                {{l('Enum_RequestStatus' + requestStatus[record.request.requestStatusId])}}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                            <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                                {{l('NoData')}}
+                            </div>
+                            <div class="primeng-paging-container">
+                                <p-paginator rows="{{primengTableHelper.defaultRecordsCountPerPage}}" #paginator
+                                    (onPageChange)="getRequests($event)"
+                                    [totalRecords]="primengTableHelper.totalRecordsCount"
+                                    [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
+                                </p-paginator>
+                                <span class="total-records-count">
+                                    {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}
+                                </span>
+                            </div>
+                        </div>
+                        <!--<Primeng-Datatable-End>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <createOrEditRequestModal #createOrEditRequestModal (modalSave)="getRequests()"></createOrEditRequestModal>
+        <viewRequestModal #viewRequestModal></viewRequestModal>
+        <!-- <createOrEditTechTeamModal #createOrEditTechTeamModal (modalSave)="getTechTeams()"></createOrEditTechTeamModal> -->
+    </div>
+</div>

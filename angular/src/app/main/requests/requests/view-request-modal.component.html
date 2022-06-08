@@ -1,0 +1,161 @@
+<div bsModal #createOrEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrEditModal" aria-hidden="true" [config]="{backdrop: 'static'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <span>{{l("")}}</span>
+                </h4>
+                <button type="button" class="close" (click)="close()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group m-form__group row">
+
+                    <div class="col-lg-9">
+                        <label class="col-lg-4 col-form-label">
+                            {{l("ClientName")}}:
+                        </label>
+
+                        <span>{{item.clientListClientName}}</span>
+                    </div>
+                </div>
+
+                <div class="form-group m-form__group row">
+
+                    <div class="col-lg-9">
+                        <label class="col-lg-4 col-form-label">
+                            {{l("RequestDomain")}}:
+                        </label>
+
+                        <span>{{item.requestDomainDomainName}}</span>
+                    </div>
+                </div>
+
+                <div class="form-group m-form__group row">
+
+                    <div class="col-lg-9">
+                        <label class="col-lg-4 col-form-label">
+                            {{l("Request area")}}:
+                        </label>
+
+                        <span>{{item.requestAreaRequestAreaName}}</span>
+                    </div>
+                </div>
+
+                <div class="form-group m-form__group row">
+
+                    <div class="col-lg-9">
+                        <label class="col-lg-4 col-form-label">
+                            {{l("Requesting manager")}}:
+                        </label>
+
+                        <span>{{item.managerName}}</span>
+                    </div>
+                </div>
+
+                <div class="form-group m-form__group row">
+
+                    <div class="col-lg-9">
+                        <label class="col-lg-4 col-form-label">
+                            {{l("Requesting partner")}}:
+                        </label>
+
+                        <span>{{item.partnerName}}</span>
+                    </div>
+                </div>
+
+                <!--
+                <div class="m-stack m-stack--hor m-stack--general m-stack--demo">
+                    <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                        <h6>{{l("LocalSubCode")}} :</h6>
+                        {{item.request.localSubCode}}
+                    </div>
+                    <div class="m-separator m-separator--dashed"></div>
+                    <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                        <h6>{{l("LocalChargeCode")}} :</h6>
+                        {{item.request.localChargeCode}}
+                    </div>
+                    <div class="m-separator m-separator--dashed"></div>
+                    <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                        <h6>{{l("IssueDiscussed")}} :</h6>
+                        {{item.request.issueDiscussed}}
+                    </div>
+                    <div class="m-separator m-separator--dashed"></div>
+                    <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                        <h6>{{l("IssueDiscussedWith")}} :</h6>
+                        {{item.request.issueDiscussedWith}}
+                    </div>
+                    <div class="m-separator m-separator--dashed"></div>
+                    <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                        <h6>{{l("ConsultationIssue")}} :</h6>
+                        {{item.request.consultationIssue}}
+                    </div>
+                    <div class="m-separator m-separator--dashed"></div>
+                    <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                        <h6>{{l("Background")}} :</h6>
+                        {{item.request.background}}
+                    </div>
+                    <div class="m-separator m-separator--dashed"></div>
+                    <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                        <h6>{{l("TechReference")}} :</h6>
+                        {{item.request.techReference}}
+                    </div>
+                    <div class="m-separator m-separator--dashed"></div>
+                    <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                        <h6>{{l("AgreedGuidance")}} :</h6>
+                        {{item.request.agreedGuidance}}
+                    </div>
+                    <div class="m-separator m-separator--dashed"></div>
+                    <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                        <h6>{{l("TechGrpResponse")}} :</h6>
+                        {{item.request.techGrpResponse}}
+                    </div>
+
+                    <div class="m-separator m-separator--dashed"></div>
+
+                    <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                        <h6>{{l("Request Area")}} :</h6>
+                        {{item.requestAreaRequestAreaName}}
+                    </div>
+                    <div class="m-separator m-separator--dashed"></div>
+                    <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                        <h6>({{l("RequestDomain")}}) {{l("DomainName")}} :</h6>
+                        {{item.requestDomainDomainName}}
+                    </div>
+                    <div class="m-separator m-separator--dashed"></div>
+                    <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                        <h6>{{l("Requestor")}} :</h6>
+                        {{item.userName}}
+                    </div>
+                    <div class="m-separator m-separator--dashed"></div>
+                    <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                        <h6>{{l("Requestor Partner")}} :</h6>
+                        {{item.userName2}}
+                    </div>
+                    <div class="m-separator m-separator--dashed"></div>
+                    <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                        <h6>{{l("Requestor Manager")}} :</h6>
+                        {{item.userName3}}
+                    </div>
+                    <div class="m-separator m-separator--dashed"></div>
+                    <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                        <h6>{{l("ClientName")}} :</h6>
+                        {{item.clientListClientName}}
+                    </div>
+
+                    <div class="m-separator m-separator--dashed"></div>
+
+                </div>
+
+                -->
+
+            </div>
+            <div class="modal-footer">
+                <button [disabled]="saving" type="button" class="btn btn-primary blue" (click)="close()">{{l("Close")}}</button>
+            </div>
+        </div>
+    </div>
+
+</div>

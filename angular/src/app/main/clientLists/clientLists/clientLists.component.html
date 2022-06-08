@@ -1,0 +1,294 @@
+<div [@routerTransition]>
+    
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="'Client Lists' | localize">
+            <div role="actions">
+                <button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel-o"></i> {{l("ExportToExcel")}}</button>
+                <button *ngIf="isGranted('Pages.Requests.Configuration')" (click)="createClientList()" 
+                        class="btn btn-primary blue"><i class="fa fa-plus"></i> {{l("Create")}}</button>
+            </div>
+        </sub-header>
+        <div [class]="containerClass">
+            <div class="card card-custom gutter-b">
+                <div class="card-body">
+
+                    <form class="horizontal-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row align-items-center m--margin-bottom-10">
+                                <div class="col-xl-12">
+                                    <div class="form-group m-form__group align-items-center">
+                                        <div class="input-group">
+                                            <input [(ngModel)]="filterText" name="filterText" autoFocus class="form-control m-input" [placeholder]="l('SearchWithThreeDot')" type="text">
+                                            <span class="input-group-btn">
+                                                <button (click)="getClientLists()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row m--margin-bottom-10" [hidden]="!advancedFiltersAreShown">
+                                <div class="col-md-12">
+                                    <div class="m-separator m-separator--dashed"></div>
+                                </div>
+
+
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="ClientNameFilter">{{l("ClientName")}}</label>
+                                        <input type="text" class="form-control" id="ClientNameFilter" name="clientNameFilter" [(ngModel)]="clientNameFilter">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="ClientAddressFilter">{{l("ClientAddress")}}</label>
+                                        <input type="text" class="form-control" id="ClientAddressFilter" name="clientAddressFilter" [(ngModel)]="clientAddressFilter">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="ParentEntityFilter">{{l("ParentEntity")}}</label>
+                                        <input type="text" class="form-control" id="ParentEntityFilter" name="parentEntityFilter" [(ngModel)]="parentEntityFilter">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="UltimateParentEntityFilter">{{l("UltimateParentEntity")}}</label>
+                                        <input type="text" class="form-control" id="UltimateParentEntityFilter" name="ultimateParentEntityFilter" [(ngModel)]="ultimateParentEntityFilter">
+                                    </div>
+                                </div>	
+                                <div class="col-md-3">
+                                    <label for="SecRegisteredFilterSelect">{{l("SecRegistered")}}</label>
+                                    <select class="form-control" name="SecRegisteredFilter" id="SecRegisteredFilterSelect" [(ngModel)]="secRegisteredFilter">
+                                    <option value="-1">{{l("All")}}</option>
+                                    <option value="0">{{l("False")}}</option>
+                                    <option value="1">{{l("True")}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="FinancialYearEndFilterSelect">{{l("FinancialYearEnd")}}</label>
+                                    <select class="form-control" name="FinancialYearEndFilter" id="FinancialYearEndFilterSelect" [(ngModel)]="financialYearEndFilter">
+                                    <option value="-1">{{l("All")}}</option>
+                                                                                <option value="0">{{l('Enum_FinYearEnd_0')}}</option>
+
+                                            <option value="1">{{l('Enum_FinYearEnd_1')}}</option>
+
+                                            <option value="2">{{l('Enum_FinYearEnd_2')}}</option>
+
+                                            <option value="3">{{l('Enum_FinYearEnd_3')}}</option>
+
+                                            <option value="4">{{l('Enum_FinYearEnd_4')}}</option>
+
+                                            <option value="5">{{l('Enum_FinYearEnd_5')}}</option>
+
+                                            <option value="6">{{l('Enum_FinYearEnd_6')}}</option>
+
+                                            <option value="7">{{l('Enum_FinYearEnd_7')}}</option>
+
+                                            <option value="8">{{l('Enum_FinYearEnd_8')}}</option>
+
+                                            <option value="9">{{l('Enum_FinYearEnd_9')}}</option>
+
+                                            <option value="10">{{l('Enum_FinYearEnd_10')}}</option>
+
+                                            <option value="11">{{l('Enum_FinYearEnd_11')}}</option>
+
+
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="ChannelTypeNameFilterSelect">{{l("ChannelTypeName")}}</label>
+                                    <select class="form-control" name="ChannelTypeNameFilter" id="ChannelTypeNameFilterSelect" [(ngModel)]="channelTypeNameFilter">
+                                    <option value="-1">{{l("All")}}</option>
+                                                                                <option value="0">{{l('Enum_ChannelType_0')}}</option>
+
+                                            <option value="1">{{l('Enum_ChannelType_1')}}</option>
+
+
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="IndustryIndustryNameFilter">({{l("Industry")}}) {{l("IndustryName")}}</label>
+                                        <input type="text" class="form-control" id="IndustryIndustryNameFilter" name="industryIndustryNameFilter" [(ngModel)]="industryIndustryNameFilter">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="ReportingTerritoryTerritoryNameFilter">({{l("ReportingTerritory")}}) {{l("TerritoryName")}}</label>
+                                        <input type="text" class="form-control" id="ReportingTerritoryTerritoryNameFilter" name="reportingTerritoryTerritoryNameFilter" [(ngModel)]="reportingTerritoryTerritoryNameFilter">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="StockExchangeStockExchangeNameFilter">({{l("StockExchange")}}) {{l("StockExchangeName")}}</label>
+                                        <input type="text" class="form-control" id="StockExchangeStockExchangeNameFilter" name="stockExchangeStockExchangeNameFilter" [(ngModel)]="stockExchangeStockExchangeNameFilter">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row margin-bottom-10">
+                                <div class="col-sm-12">
+                                    <span class="clickable-item text-muted" *ngIf="!advancedFiltersAreShown" (click)="advancedFiltersAreShown=!advancedFiltersAreShown"><i class="fa fa-angle-down"></i> {{l("ShowAdvancedFilters")}}</span>
+                                    <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown" (click)="advancedFiltersAreShown=!advancedFiltersAreShown"><i class="fa fa-angle-up"></i> {{l("HideAdvancedFilters")}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="row align-items-center">
+                        <!--<Primeng-Datatable-Start>-->
+                        <div class="primeng-datatable-container"
+                            [busyIf]="primengTableHelper.isLoading">
+                            <p-table #dataTable
+                                        (onLazyLoad)="getClientLists($event)"
+                                        [value]="primengTableHelper.records"
+                                        rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
+                                        [paginator]="false"
+                                        [lazy]="true"
+                                        [scrollable]="true"
+                                        ScrollWidth="100%"
+                                        [responsive]="primengTableHelper.isResponsive"
+                                        [resizableColumns]="primengTableHelper.resizableColumns">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th style="width: 130px" [hidden]="!isGrantedAny('Pages.Requests.Configuration', 'Pages.Requests.Configuration')">{{l('Actions')}}</th>
+                                        <th style="width: 150px" pSortableColumn="industryIndustryName">
+                                            {{l('IndustryName')}}
+                                            <p-sortIcon field="industryIndustryName"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 150px" pSortableColumn="reportingTerritoryTerritoryName">
+                                            {{l('TerritoryName')}}
+                                            <p-sortIcon field="reportingTerritoryTerritoryName"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 150px" pSortableColumn="stockExchangeStockExchangeName">
+                                            {{l('StockExchangeName')}}
+                                            <p-sortIcon field="stockExchangeStockExchangeName"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 150px" pSortableColumn="clientList.clientName">
+                                            {{l('ClientName')}}
+                                            <p-sortIcon field="clientList.clientName"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 150px" pSortableColumn="clientList.clientAddress">
+                                            {{l('ClientAddress')}}
+                                            <p-sortIcon field="clientList.clientAddress"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 150px" pSortableColumn="clientList.parentEntity">
+                                            {{l('ParentEntity')}}
+                                            <p-sortIcon field="clientList.parentEntity"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 150px" pSortableColumn="clientList.ultimateParentEntity">
+                                            {{l('UltimateParentEntity')}}
+                                            <p-sortIcon field="clientList.ultimateParentEntity"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 150px" pSortableColumn="clientList.secRegistered">
+                                            {{l('SecRegistered')}}
+                                            <p-sortIcon field="clientList.secRegistered"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 150px" pSortableColumn="clientList.financialYearEnd">
+                                            {{l('FinancialYearEnd')}}
+                                            <p-sortIcon field="clientList.financialYearEnd"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 150px" pSortableColumn="clientList.channelTypeName">
+                                            {{l('ChannelTypeName')}}
+                                            <p-sortIcon field="clientList.channelTypeName"></p-sortIcon>
+                                        </th>
+
+                                    </tr>
+                                </ng-template>                           
+                                <ng-template pTemplate="body" let-record="$implicit">
+                                    <tr>
+                                        <td style="width: 130px"
+                                            [hidden]="!isGrantedAny('Pages.Requests.Configuration', 'Pages.Requests.Configuration')">
+                                            <div class="btn-group dropdown" normalizePosition>
+                                                <button class="dropdown-toggle btn btn-sm btn-primary"
+                                                        data-toggle="dropdown"
+                                                        aria-haspopup="true"
+                                                        aria-expanded="false">
+                                                    <i class="fa fa-cog"></i><span class="caret"></span> {{l("Actions")}}
+                                                </button>
+                                                    <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a 
+                                                            (click)="viewClientListModal.show(record)">{{l('View')}}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a *ngIf="permission.isGranted('Pages.Requests.Configuration')"
+                                                            (click)="createOrEditClientListModal.show(record.clientList.id)">{{l('Edit')}}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a *ngIf="permission.isGranted('Pages.Requests.Configuration')"
+                                                            (click)="deleteClientList(record.clientList)">{{l('Delete')}}</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td style="width:150px">
+                                                    <span class="ui-column-title"> {{l('IndustryName')}}</span>
+                                                    {{record.industryIndustryName}}
+                                                </td>
+                                        <td style="width:150px">
+                                                    <span class="ui-column-title"> {{l('TerritoryName')}}</span>
+                                                    {{record.reportingTerritoryTerritoryName}}
+                                                </td>
+                                        <td style="width:150px">
+                                                    <span class="ui-column-title"> {{l('StockExchangeName')}}</span>
+                                                    {{record.stockExchangeStockExchangeName}}
+                                                </td>
+                                        <td style="width:150px">
+                                                <span class="ui-column-title"> {{l('ClientName')}}</span>
+                                                {{record.clientList.clientName}}
+                                            </td>
+                                        <td style="width:150px">
+                                                <span class="ui-column-title"> {{l('ClientAddress')}}</span>
+                                                {{record.clientList.clientAddress}}
+                                            </td>
+                                        <td style="width:150px">
+                                                <span class="ui-column-title"> {{l('ParentEntity')}}</span>
+                                                {{record.clientList.parentEntity}}
+                                            </td>
+                                        <td style="width:150px">
+                                                <span class="ui-column-title"> {{l('UltimateParentEntity')}}</span>
+                                                {{record.clientList.ultimateParentEntity}}
+                                            </td>
+                                        <td style="width:150px">
+                                            <span class="ui-column-title"> {{l('SecRegistered')}}</span>
+                                            <div *ngIf="record.clientList.secRegistered" class="text-center"><i class="fa fa-check-circle m--font-success" title="True"></i></div>
+                                            <div *ngIf="!record.clientList.secRegistered" class="text-center"><i class="fa fa-times-circle" title="False"></i></div>
+                                        </td>
+                                        <td style="width:150px">
+                                            <span class="ui-column-title"> {{l('FinancialYearEnd')}}</span>
+                                            {{l('Enum_FinYearEnd' + finYearEnd[record.clientList.financialYearEnd])}}
+                                        </td>
+                                        <td style="width:150px">
+                                            <span class="ui-column-title"> {{l('ChannelTypeName')}}</span>
+                                            {{l('Enum_ChannelType' + channelType[record.clientList.channelTypeName])}}
+                                        </td>
+
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                            <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                                {{l('NoData')}}
+                            </div>
+                            <div class="primeng-paging-container">
+                                <p-paginator rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
+                                            #paginator
+                                            (onPageChange)="getClientLists($event)"
+                                            [totalRecords]="primengTableHelper.totalRecordsCount"
+                                            [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
+                                </p-paginator>
+                                <span class="total-records-count">
+                                    {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}
+                                </span>
+                            </div>
+                        </div>
+                        <!--<Primeng-Datatable-End>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <createOrEditClientListModal #createOrEditClientListModal (modalSave)="getClientLists()"></createOrEditClientListModal>
+        <viewClientListModal #viewClientListModal></viewClientListModal>
+    </div>
+</div>

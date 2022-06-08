@@ -1,0 +1,347 @@
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid">
+    <div class="m-subheader">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto col-md-6">
+                <h3 class="m-subheader__title m-subheader__title--separator">
+                    <span>{{l("Requests")}}</span>
+                </h3>
+                <span class="m-section__sub">
+                    {{l("RequestsHeaderInfo")}}
+                </span>
+            </div>
+            <div class="col-md-6 text-right">
+				<button (click)="exportToExcel()" class="btn btn-outline-success"><i class="fa fa-file-excel-o"></i> {{l("ExportToExcel")}}</button>
+                <button *ngIf="isGranted('Pages.Requests.Create')" (click)="createRequest()"
+			class="btn btn-primary blue" hidden><i class="fa fa-plus"></i> {{l("CreateNewRequest")}}</button>
+            </div>
+        </div>
+    </div>
+    <div [class]="containerClass">
+        <div class="card card-custom gutter-b">
+            <div class="card-body">
+
+				<form class="horizontal-form" autocomplete="off">
+                    <div class="m-form m-form--label-align-right">
+                        <div class="row align-items-center m--margin-bottom-10">
+                            <div class="col-xl-12">
+                                <div class="form-group m-form__group align-items-center">
+                                    <div class="input-group">
+                                        <input [(ngModel)]="filterText" name="filterText" autoFocus class="form-control m-input" [placeholder]="l('SearchWithThreeDot')" type="text">
+                                        <span class="input-group-btn">
+                                            <button (click)="getRequests()" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+						 <div class="row m--margin-bottom-10" [hidden]="!advancedFiltersAreShown">
+						 	<div class="col-md-12">
+						         <div class="m-separator m-separator--dashed"></div>
+						     </div>
+
+
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="LocalSubCodeFilter">{{l("LocalSubCode")}}</label>
+									<input type="text" class="form-control" id="LocalSubCodeFilter" name="localSubCodeFilter" [(ngModel)]="localSubCodeFilter">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="LocalChargeCodeFilter">{{l("LocalChargeCode")}}</label>
+									<input type="text" class="form-control" id="LocalChargeCodeFilter" name="localChargeCodeFilter" [(ngModel)]="localChargeCodeFilter">
+								</div>
+                            </div>
+                            <!-- <div class="col-md-3">
+                                <div class="form-group">
+									<label  for="MinSubmissionDateFilter">{{l("MinMax")}} {{l("SubmissionDate")}}</label>
+									<div class="input-group">
+                                        <input class="form-control m-input" id="MinSubmissionDateFilter" type="datetime" datePicker  placeholder="{{l('MinValue')}}" [(selectedDate)]="minSubmissionDateFilter">
+                                        <input class="form-control m-input" type="datetime" datePicker  placeholder="{{l('MaxValue')}}" [(selectedDate)]="maxSubmissionDateFilter">
+									</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+									<label  for="MinRequiredResponseDateFilter">{{l("MinMax")}} {{l("RequiredResponseDate")}}</label>
+									<div class="input-group">
+                                        <input class="form-control m-input" id="MinRequiredResponseDateFilter" type="datetime" datePicker  placeholder="{{l('MinValue')}}" [(selectedDate)]="minRequiredResponseDateFilter">
+                                        <input class="form-control m-input" type="datetime" datePicker  placeholder="{{l('MaxValue')}}" [(selectedDate)]="maxRequiredResponseDateFilter">
+									</div>
+                                </div>
+                            </div> -->
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="ReasonResponseDateFilter">{{l("ReasonResponseDate")}}</label>
+									<input type="text" class="form-control" id="ReasonResponseDateFilter" name="reasonResponseDateFilter" [(ngModel)]="reasonResponseDateFilter">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<label for="IssueDiscussedFilterSelect">{{l("IssueDiscussed")}}</label>
+								<select class="form-control" name="IssueDiscussedFilter" id="IssueDiscussedFilterSelect" [(ngModel)]="issueDiscussedFilter">
+								<option value="-1">{{l("All")}}</option>
+								<option value="0">{{l("False")}}</option>
+								<option value="1">{{l("True")}}</option>
+								</select>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="IssueDiscussedWithFilter">{{l("IssueDiscussedWith")}}</label>
+									<input type="text" class="form-control" id="IssueDiscussedWithFilter" name="issueDiscussedWithFilter" [(ngModel)]="issueDiscussedWithFilter">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="OOTReviewerFilter">{{l("OOTReviewer")}}</label>
+									<input type="text" class="form-control" id="OOTReviewerFilter" name="ootReviewerFilter" [(ngModel)]="ootReviewerFilter">
+								</div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+									<label for="MinOOTReviewerTimeFilter">{{l("MinMax")}} {{l("OOTReviewerTime")}}</label>
+									<div class="input-group">
+                                        <input type="number" class="form-control" id="MinOOTReviewerTimeFilter" [(ngModel)]="minOOTReviewerTimeFilter" placeholder="{{l('MinValue')}}" name="minOOTReviewerTimeFilter" />
+                                        <input type="number" class="form-control" [(ngModel)]="maxOOTReviewerTimeFilter" placeholder="{{l('MaxValue')}}" name="maxOOTReviewerTimeFilter" />
+									</div>
+                                </div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="ConsultationIssueFilter">{{l("ConsultationIssue")}}</label>
+									<input type="text" class="form-control" id="ConsultationIssueFilter" name="consultationIssueFilter" [(ngModel)]="consultationIssueFilter">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="BackgroundFilter">{{l("Background")}}</label>
+									<input type="text" class="form-control" id="BackgroundFilter" name="backgroundFilter" [(ngModel)]="backgroundFilter">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="TechReferenceFilter">{{l("TechReference")}}</label>
+									<input type="text" class="form-control" id="TechReferenceFilter" name="techReferenceFilter" [(ngModel)]="techReferenceFilter">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="AgreedGuidanceFilter">{{l("AgreedGuidance")}}</label>
+									<input type="text" class="form-control" id="AgreedGuidanceFilter" name="agreedGuidanceFilter" [(ngModel)]="agreedGuidanceFilter">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="TechGrpResponseFilter">{{l("TechGrpResponse")}}</label>
+									<input type="text" class="form-control" id="TechGrpResponseFilter" name="techGrpResponseFilter" [(ngModel)]="techGrpResponseFilter">
+								</div>
+                            </div>
+                            <!-- <div class="col-md-3">
+                                <div class="form-group">
+									<label  for="MinCompletionDateFilter">{{l("MinMax")}} {{l("CompletionDate")}}</label>
+									<div class="input-group">
+                                        <input class="form-control m-input" id="MinCompletionDateFilter" type="datetime" datePicker  placeholder="{{l('MinValue')}}" [(selectedDate)]="minCompletionDateFilter">
+                                        <input class="form-control m-input" type="datetime" datePicker  placeholder="{{l('MaxValue')}}" [(selectedDate)]="maxCompletionDateFilter">
+									</div>
+                                </div>
+                            </div> -->
+							<div class="col-md-3">
+								<label for="RequestStatusIdFilterSelect">{{l("RequestStatusId")}}</label>
+								<select class="form-control" name="RequestStatusIdFilter" id="RequestStatusIdFilterSelect" [(ngModel)]="requestStatusIdFilter">
+								<option value="-1">{{l("All")}}</option>
+																			<option value="0">{{l('Enum_RequestStatus_0')}}</option>
+
+										<option value="1">{{l('Enum_RequestStatus_1')}}</option>
+
+										<option value="2">{{l('Enum_RequestStatus_2')}}</option>
+
+										<option value="3">{{l('Enum_RequestStatus_3')}}</option>
+
+										<option value="4">{{l('Enum_RequestStatus_4')}}</option>
+
+										<option value="5">{{l('Enum_RequestStatus_5')}}</option>
+
+
+								</select>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="RequestAreaRequestAreaNameFilter">({{l("RequestArea")}}) {{l("RequestAreaName")}}</label>
+									<input type="text" class="form-control" id="RequestAreaRequestAreaNameFilter" name="requestAreaRequestAreaNameFilter" [(ngModel)]="requestAreaRequestAreaNameFilter">
+                                </div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="RequestDomainDomainNameFilter">({{l("RequestDomain")}}) {{l("DomainName")}}</label>
+									<input type="text" class="form-control" id="RequestDomainDomainNameFilter" name="requestDomainDomainNameFilter" [(ngModel)]="requestDomainDomainNameFilter">
+                                </div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="UserNameFilter">({{l("User")}}) {{l("Name")}}</label>
+									<input type="text" class="form-control" id="UserNameFilter" name="userNameFilter" [(ngModel)]="userNameFilter">
+                                </div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="UserName2Filter">({{l("User2")}}) {{l("Name")}}</label>
+									<input type="text" class="form-control" id="UserName2Filter" name="userName2Filter" [(ngModel)]="userName2Filter">
+                                </div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="UserName3Filter">({{l("User3")}}) {{l("Name")}}</label>
+									<input type="text" class="form-control" id="UserName3Filter" name="userName3Filter" [(ngModel)]="userName3Filter">
+                                </div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="ClientListClientNameFilter">({{l("ClientList")}}) {{l("ClientName")}}</label>
+									<input type="text" class="form-control" id="ClientListClientNameFilter" name="clientListClientNameFilter" [(ngModel)]="clientListClientNameFilter">
+                                </div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="UserName4Filter">({{l("User4")}}) {{l("Name")}}</label>
+									<input type="text" class="form-control" id="UserName4Filter" name="userName4Filter" [(ngModel)]="userName4Filter">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row margin-bottom-10">
+                            <div class="col-sm-12">
+                                <span class="clickable-item text-muted" *ngIf="!advancedFiltersAreShown" (click)="advancedFiltersAreShown=!advancedFiltersAreShown"><i class="fa fa-angle-down"></i> {{l("ShowAdvancedFilters")}}</span>
+                                <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown" (click)="advancedFiltersAreShown=!advancedFiltersAreShown"><i class="fa fa-angle-up"></i> {{l("HideAdvancedFilters")}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="row align-items-center">
+                    <!--<Primeng-Datatable-Start>-->
+                    <div class="primeng-datatable-container"
+                         [busyIf]="primengTableHelper.isLoading">
+                        <p-table #dataTable
+                                     (onLazyLoad)="getRequests($event)"
+                                     [value]="primengTableHelper.records"
+                                     rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
+                                     [paginator]="false"
+                                     [lazy]="true"
+                                     [scrollable]="true"
+                                     ScrollWidth="100%"
+                                     [responsive]="primengTableHelper.isResponsive"
+                                     [resizableColumns]="primengTableHelper.resizableColumns">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width: 130px" [hidden]="!isGrantedAny('Pages.Requests.Edit', 'Pages.Requests.Delete')">{{l('Actions')}}</th>
+                                    <th style="width: 150px" pSortableColumn="requestAreaRequestAreaName">
+                                        {{l('RequestArea')}}
+                                        <p-sortIcon field="requestAreaRequestAreaName"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="requestDomainDomainName">
+                                        {{l('RequestDomain')}}
+                                        <p-sortIcon field="requestDomainDomainName"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="userName">
+                                        {{l('Requestor Name')}}
+                                        <p-sortIcon field="userName"></p-sortIcon>
+                                    </th>
+
+                                    <th style="width: 150px" pSortableColumn="clientListClientName">
+                                        {{l('ClientName')}}
+                                        <p-sortIcon field="clientListClientName"></p-sortIcon>
+                                    </th>
+
+                                    <th style="width: 150px" pSortableColumn="request.submissionDate">
+                                        {{l('SubmissionDate')}}
+                                        <p-sortIcon field="request.submissionDate"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="request.requestStatusId">
+                                        {{l('Status')}}
+                                        <p-sortIcon field="request.requestStatusId"></p-sortIcon>
+                                    </th>
+                                </tr>
+                            </ng-template>
+							<ng-template pTemplate="body" let-record="$implicit">
+                                <tr>
+                                    <td style="width: 130px"
+                                        [hidden]="!isGrantedAny('Pages.Requests.Edit', 'Pages.Requests.Delete')">
+                                        <div class="btn-group dropdown" normalizePosition>
+                                            <button class="dropdown-toggle btn btn-sm btn-primary"
+                                                    data-toggle="dropdown"
+                                                    aria-haspopup="true"
+                                                    aria-expanded="false">
+                                                <i class="fa fa-cog"></i><span class="caret"></span> {{l("Actions")}}
+                                            </button>
+												<ul class="dropdown-menu">
+												<li>
+													<a
+														(click)="viewRequestModal.show(record)">{{l('View')}}</a>
+												</li>
+
+                        <li>
+											        <a *ngIf="permission.isGranted('Pages.Requests.Delete')"
+														(click)="createOrEditRequestModal.show(record.request.id, 1)">{{l('Assign Request')}}</a>
+												</li>
+
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td style="width:150px">
+												<span class="ui-column-title"> {{l('RequestAreaName')}}</span>
+												{{record.requestAreaRequestAreaName}}
+											</td>
+                                    <td style="width:150px">
+												<span class="ui-column-title"> {{l('DomainName')}}</span>
+												{{record.requestDomainDomainName}}
+											</td>
+                                    <td style="width:150px">
+												<span class="ui-column-title"> {{l('Name')}}</span>
+												{{record.userName}}
+											</td>
+
+                                    <td style="width:150px">
+												<span class="ui-column-title"> {{l('ClientName')}}</span>
+												{{record.clientListClientName}}
+											</td>
+
+                                    <td style="width:150px">
+										<span class="ui-column-title"> {{l('SubmissionDate')}}</span>
+                                        <span *ngIf="record.request.submissionDate">
+											{{record.request.submissionDate | momentFormat:'L'}}
+                                        </span>
+                                        <span *ngIf="!record.request.submissionDate">-</span>
+                                    </td>
+                                    <td style="width:150px">
+										<span class="ui-column-title"> {{l('RequestStatusId')}}</span>
+										{{l('Enum_RequestStatus' + requestStatus[record.request.requestStatusId])}}
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+						<div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                            {{l('NoData')}}
+                        </div>
+                        <div class="primeng-paging-container">
+                            <p-paginator rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
+                                         #paginator
+                                         (onPageChange)="getRequests($event)"
+                                         [totalRecords]="primengTableHelper.totalRecordsCount"
+                                         [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
+                            </p-paginator>
+                            <span class="total-records-count">
+                                {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}
+                            </span>
+                        </div>
+                    </div>
+                    <!--<Primeng-Datatable-End>-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <createOrEditRequestModal #createOrEditRequestModal (modalSave)="getRequests()"></createOrEditRequestModal>
+    <viewRequestModal #viewRequestModal></viewRequestModal>
+    </div>
+    <!-- <createOrEditTechTeamModal #createOrEditTechTeamModal (modalSave)="getTechTeams()"></!--> -->
+</div>
